@@ -41,37 +41,37 @@ const ParentDashboard: React.FC = () => {
       color: 'text-secondary',
       bgColor: 'bg-secondary/10'
     },
-    {
-      title: 'Payment Status',
-      value: 'Paid',
-      icon: CheckCircle,
-      color: 'text-success',
-      bgColor: 'bg-success/10'
-    }
+        {
+          title: 'حالة الدفع الشهري',
+          value: 'تم الدفع',
+          icon: CheckCircle,
+          color: 'text-success',
+          bgColor: 'bg-success/10'
+        }
   ];
 
   const busUpdates = [
     {
-      time: '07:45 AM',
-      message: 'Bus #12 approaching pickup location',
+      time: '07:45 ص',
+      message: 'الحافلة رقم 12 تقترب من نقطة الاستلام',
       type: 'info',
       icon: Navigation
     },
     {
-      time: '07:30 AM',
-      message: 'Ahmed boarded Bus #12',
+      time: '07:30 ص',
+      message: 'أحمد ركب الحافلة رقم 12 بأمان',
       type: 'success',
       icon: CheckCircle
     },
     {
-      time: '03:20 PM',
-      message: 'Fatima dropped off safely',
+      time: '03:20 م',
+      message: 'تم توصيل فاطمة بأمان إلى المنزل',
       type: 'success',
       icon: CheckCircle
     },
     {
-      time: '03:15 PM',
-      message: 'Bus #12 delayed by 5 minutes',
+      time: '03:15 م',
+      message: 'الحافلة رقم 12 متأخرة 5 دقائق بسبب الازدحام',
       type: 'warning',
       icon: AlertTriangle
     }
@@ -79,18 +79,18 @@ const ParentDashboard: React.FC = () => {
 
   const children = [
     {
-      name: 'Ahmed Ali',
-      grade: 'Grade 8',
-      bus: 'Bus #12',
-      status: 'On Bus',
+      name: 'أحمد محمد علي',
+      grade: 'الصف الثامن',
+      bus: 'حافلة رقم 12',
+      status: 'في الحافلة',
       statusColor: 'text-warning',
       bgColor: 'bg-warning/10'
     },
     {
-      name: 'Fatima Ali',
-      grade: 'Grade 5',
-      bus: 'Bus #12',
-      status: 'At School',
+      name: 'فاطمة أحمد علي',
+      grade: 'الصف الخامس',
+      bus: 'حافلة رقم 12',
+      status: 'في المدرسة',
       statusColor: 'text-success',
       bgColor: 'bg-success/10'
     }
@@ -110,7 +110,7 @@ const ParentDashboard: React.FC = () => {
             {t('dashboard.welcome')} 👋
           </h1>
           <p className="text-lg opacity-90">
-            Keep track of your children's safe journey to and from school
+            تابع رحلة أطفالك الآمنة من وإلى المدرسة بكل سهولة وطمأنينة
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button variant="glass" size="lg">
@@ -119,7 +119,7 @@ const ParentDashboard: React.FC = () => {
             </Button>
             <Button variant="glass" size="lg">
               <Bell className="w-5 h-5" />
-              Notifications
+              التنبيهات والإشعارات
             </Button>
           </div>
         </div>
@@ -179,7 +179,7 @@ const ParentDashboard: React.FC = () => {
             </div>
             <Button variant="tracking" className="w-full">
               <Navigation className="w-4 h-4" />
-              View Full Map
+              عرض الخريطة كاملة
             </Button>
           </CardContent>
         </Card>
@@ -189,10 +189,10 @@ const ParentDashboard: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse">
               <Users className="w-5 h-5 text-success" />
-              <span>My Children</span>
+              <span>أطفالي</span>
             </CardTitle>
             <CardDescription>
-              Current status and location
+              الحالة الحالية والموقع المباشر
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -219,7 +219,7 @@ const ParentDashboard: React.FC = () => {
             ))}
             <Button variant="parent" className="w-full mt-4">
               <Users className="w-4 h-4" />
-              Manage Children
+              إدارة بيانات الأطفال
             </Button>
           </CardContent>
         </Card>
@@ -230,10 +230,10 @@ const ParentDashboard: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse">
             <Bell className="w-5 h-5 text-warning" />
-            <span>Recent Updates</span>
+            <span>آخر التحديثات والإشعارات</span>
           </CardTitle>
           <CardDescription>
-            Latest notifications about your children's journey
+            أحدث الإشعارات حول رحلة أطفالك اليومية
           </CardDescription>
         </CardHeader>
         <CardContent>

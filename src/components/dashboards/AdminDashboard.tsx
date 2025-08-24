@@ -40,14 +40,14 @@ const AdminDashboard: React.FC = () => {
     },
     {
       title: t('dashboard.totalRevenue'),
-      value: '$89,247',
+      value: '89,247 ريال',
       change: '+8.2%',
       icon: DollarSign,
       color: 'text-success',
       bgColor: 'bg-success/10'
     },
     {
-      title: 'Efficiency',
+      title: 'كفاءة النظام العامة',
       value: '96.3%',
       change: '+2.1%',
       icon: TrendingUp,
@@ -59,47 +59,47 @@ const AdminDashboard: React.FC = () => {
   const recentAlerts = [
     {
       id: 1,
-      message: 'Bus #12 reported mechanical issue',
+      message: 'الحافلة رقم 12 أبلغت عن عطل ميكانيكي',
       type: 'warning',
-      time: '2 minutes ago',
+      time: 'منذ دقيقتين',
       priority: 'high'
     },
     {
       id: 2,
-      message: 'New student registration: Ahmed Ali',
+      message: 'تسجيل طالب جديد: أحمد محمد علي',
       type: 'info',
-      time: '15 minutes ago',
+      time: 'منذ 15 دقيقة',
       priority: 'medium'
     },
     {
       id: 3,
-      message: 'Route optimization completed for District 3',
+      message: 'تم الانتهاء من تحسين المسار للمنطقة الثالثة',
       type: 'success',
-      time: '1 hour ago',
+      time: 'منذ ساعة واحدة',
       priority: 'low'
     },
     {
       id: 4,
-      message: 'Payment overdue: Al-Noor School',
+      message: 'دفعة متأخرة: مدرسة النور الدولية',
       type: 'warning',
-      time: '3 hours ago',
+      time: 'منذ 3 ساعات',
       priority: 'high'
     }
   ];
 
   const busStatus = [
-    { id: 'Bus #01', status: 'active', students: 28, route: 'North District', driver: 'Ahmed Hassan' },
-    { id: 'Bus #12', status: 'maintenance', students: 0, route: 'City Center', driver: 'Omar Abdullah' },
-    { id: 'Bus #07', status: 'active', students: 32, route: 'South Zone', driver: 'Fatima Al-Zahra' },
-    { id: 'Bus #19', status: 'active', students: 24, route: 'East Area', driver: 'Maryam Said' },
-    { id: 'Bus #23', status: 'inactive', students: 0, route: 'West District', driver: 'Hassan Ali' }
+    { id: 'حافلة رقم 01', status: 'active', students: 28, route: 'المنطقة الشمالية', driver: 'أحمد حسن محمود' },
+    { id: 'حافلة رقم 12', status: 'maintenance', students: 0, route: 'وسط المدينة', driver: 'عمر عبد الله سالم' },
+    { id: 'حافلة رقم 07', status: 'active', students: 32, route: 'المنطقة الجنوبية', driver: 'فاطمة الزهراء أحمد' },
+    { id: 'حافلة رقم 19', status: 'active', students: 24, route: 'المنطقة الشرقية', driver: 'مريم سعيد علي' },
+    { id: 'حافلة رقم 23', status: 'inactive', students: 0, route: 'المنطقة الغربية', driver: 'حسن علي محمد' }
   ];
 
   const recentTransactions = [
-    { school: 'Al-Noor International School', amount: '$2,450', status: 'paid', date: '2024-01-15' },
-    { school: 'Green Valley Academy', amount: '$1,890', status: 'pending', date: '2024-01-14' },
-    { school: 'Future Leaders School', amount: '$3,200', status: 'paid', date: '2024-01-13' },
-    { school: 'Bright Minds Institute', amount: '$1,650', status: 'overdue', date: '2024-01-10' }
+    { school: 'مدرسة النور الدولية', amount: '2,450 ريال', status: 'paid', date: '2024-01-15' },
+    { school: 'أكاديمية الوادي الأخضر', amount: '1,890 ريال', status: 'pending', date: '2024-01-14' },
+    { school: 'مدرسة قادة المستقبل', amount: '3,200 ريال', status: 'paid', date: '2024-01-13' },
+    { school: 'معهد العقول المشرقة', amount: '1,650 ريال', status: 'overdue', date: '2024-01-10' }
   ];
 
   return (
@@ -107,23 +107,23 @@ const AdminDashboard: React.FC = () => {
       {/* Welcome Section */}
       <div className="bg-gradient-hero rounded-2xl p-8 text-white shadow-bus">
         <h1 className="text-3xl font-bold mb-2">
-          System Overview 📊
+          نظرة عامة شاملة على النظام 📊
         </h1>
         <p className="text-lg opacity-90 mb-6">
-          Comprehensive control panel for SafeRoute transportation system
+          لوحة التحكم الكاملة لنظام الطريق الآمن لوسائل النقل المدرسي
         </p>
         <div className="flex flex-wrap gap-3">
           <Button variant="glass" size="lg">
             <PlusCircle className="w-5 h-5" />
-            Add New School
+            إضافة مدرسة جديدة
           </Button>
           <Button variant="glass" size="lg">
             <Bus className="w-5 h-5" />
-            Fleet Management
+            إدارة الأسطول
           </Button>
           <Button variant="glass" size="lg">
             <BarChart3 className="w-5 h-5" />
-            Analytics
+            التحليلات المفصلة
           </Button>
         </div>
       </div>
@@ -144,7 +144,7 @@ const AdminDashboard: React.FC = () => {
                       {stat.value}
                     </p>
                     <p className="text-xs text-success font-medium mt-1">
-                      {stat.change} from last month
+                      {stat.change} من الشهر الماضي
                     </p>
                   </div>
                   <div className={`p-3 rounded-lg ${stat.bgColor}`}>
@@ -163,10 +163,10 @@ const AdminDashboard: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse">
               <MapPin className="w-5 h-5 text-primary" />
-              <span>Fleet Overview</span>
+              <span>نظرة عامة على الأسطول</span>
             </CardTitle>
             <CardDescription>
-              Real-time tracking of all active buses
+              تتبع مباشر لجميع الحافلات النشطة
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -179,11 +179,11 @@ const AdminDashboard: React.FC = () => {
               <div className="absolute top-4 left-4 space-y-2">
                 <div className="flex items-center space-x-2 rtl:space-x-reverse bg-white/90 dark:bg-black/90 px-3 py-2 rounded-lg">
                   <div className="w-3 h-3 bg-success rounded-full animate-tracking" />
-                  <span className="text-sm font-medium">42 Active Buses</span>
+                  <span className="text-sm font-medium">42 حافلة نشطة</span>
                 </div>
                 <div className="flex items-center space-x-2 rtl:space-x-reverse bg-white/90 dark:bg-black/90 px-3 py-2 rounded-lg">
                   <div className="w-3 h-3 bg-warning rounded-full" />
-                  <span className="text-sm font-medium">3 Maintenance</span>
+                  <span className="text-sm font-medium">3 في الصيانة</span>
                 </div>
               </div>
             </div>
@@ -212,13 +212,14 @@ const AdminDashboard: React.FC = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium text-foreground">
-                      {bus.students} students
+                      {bus.students} طالب
                     </p>
                     <p className={`text-xs capitalize ${
                       bus.status === 'active' ? 'text-success' : 
                       bus.status === 'maintenance' ? 'text-warning' : 'text-muted-foreground'
                     }`}>
-                      {bus.status}
+                      {bus.status === 'active' ? 'نشطة' : 
+                       bus.status === 'maintenance' ? 'صيانة' : 'غير نشطة'}
                     </p>
                   </div>
                 </div>
@@ -232,10 +233,10 @@ const AdminDashboard: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse">
               <AlertTriangle className="w-5 h-5 text-warning" />
-              <span>System Alerts</span>
+              <span>تنبيهات النظام</span>
             </CardTitle>
             <CardDescription>
-              Recent notifications and issues
+              الإشعارات والمشاكل الأخيرة
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -260,7 +261,7 @@ const AdminDashboard: React.FC = () => {
             ))}
             <Button variant="admin" className="w-full">
               <AlertTriangle className="w-4 h-4" />
-              View All Alerts
+              عرض جميع التنبيهات
             </Button>
           </CardContent>
         </Card>
@@ -271,10 +272,10 @@ const AdminDashboard: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse">
             <DollarSign className="w-5 h-5 text-success" />
-            <span>Financial Overview</span>
+            <span>النظرة المالية الشاملة</span>
           </CardTitle>
           <CardDescription>
-            Recent transactions and payment status
+            المعاملات الأخيرة وحالة المدفوعات
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -282,10 +283,10 @@ const AdminDashboard: React.FC = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left p-3 font-medium text-muted-foreground">School</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Amount</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Status</th>
-                  <th className="text-left p-3 font-medium text-muted-foreground">Date</th>
+                  <th className="text-right p-3 font-medium text-muted-foreground">المدرسة</th>
+                  <th className="text-right p-3 font-medium text-muted-foreground">المبلغ</th>
+                  <th className="text-right p-3 font-medium text-muted-foreground">الحالة</th>
+                  <th className="text-right p-3 font-medium text-muted-foreground">التاريخ</th>
                 </tr>
               </thead>
               <tbody>
@@ -301,7 +302,8 @@ const AdminDashboard: React.FC = () => {
                           ? 'bg-warning/10 text-warning'
                           : 'bg-destructive/10 text-destructive'
                       }`}>
-                        {transaction.status}
+                        {transaction.status === 'paid' ? 'مدفوع' : 
+                         transaction.status === 'pending' ? 'في الانتظار' : 'متأخر'}
                       </span>
                     </td>
                     <td className="p-3 text-muted-foreground">{transaction.date}</td>
@@ -312,11 +314,11 @@ const AdminDashboard: React.FC = () => {
           </div>
           <div className="flex justify-between items-center mt-4 pt-4 border-t border-border">
             <p className="text-sm text-muted-foreground">
-              Showing 4 of 156 transactions
+              عرض 4 من أصل 156 معاملة مالية
             </p>
             <Button variant="admin">
               <FileText className="w-4 h-4" />
-              Generate Report
+              إنشاء تقرير مفصل
             </Button>
           </div>
         </CardContent>

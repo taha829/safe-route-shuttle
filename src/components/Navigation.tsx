@@ -46,9 +46,7 @@ const Navigation: React.FC<NavigationProps> = ({
     { key: 'settings', icon: Settings, label: t('nav.settings') },
   ];
 
-  const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'ar' : 'en');
-  };
+  // Language is now Arabic only, no toggle needed
 
   return (
     <nav className="bg-card border-b border-border shadow-card-custom sticky top-0 z-50 backdrop-blur-md">
@@ -61,7 +59,7 @@ const Navigation: React.FC<NavigationProps> = ({
             </div>
             <div className="hidden md:block">
               <h1 className="text-xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-                SafeRoute
+                الطريق الآمن
               </h1>
               <p className="text-xs text-muted-foreground">
                 {t('dashboard.subtitle')}
@@ -121,15 +119,11 @@ const Navigation: React.FC<NavigationProps> = ({
               )}
             </Button>
 
-            {/* Language Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleLanguage}
-              className="w-9 h-9 rounded-lg"
-            >
-              <Globe className="w-4 h-4" />
-            </Button>
+            {/* Arabic Language Indicator */}
+            <div className="hidden md:flex items-center px-3 py-1 bg-primary/10 rounded-lg">
+              <Globe className="w-4 h-4 text-primary ml-2" />
+              <span className="text-sm font-medium text-primary">العربية</span>
+            </div>
 
             {/* Mobile Menu Toggle */}
             <Button

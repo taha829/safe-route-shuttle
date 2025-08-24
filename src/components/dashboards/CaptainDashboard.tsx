@@ -21,29 +21,29 @@ const CaptainDashboard: React.FC = () => {
 
   const stats = [
     {
-      title: 'Assigned Students',
+      title: 'عدد الطلاب المخصصين',
       value: '24',
       icon: Users,
       color: 'text-primary',
       bgColor: 'bg-primary/10'
     },
     {
-      title: 'Route Distance',
-      value: '15.2 km',
+      title: 'مسافة المسار الكلية',
+      value: '15.2 كم',
       icon: Route,
       color: 'text-secondary',
       bgColor: 'bg-secondary/10'
     },
     {
-      title: 'Today\'s Pickups',
+      title: 'استلام طلاب اليوم',
       value: '22/24',
       icon: CheckCircle,
       color: 'text-success',
       bgColor: 'bg-success/10'
     },
     {
-      title: 'Estimated Time',
-      value: '45 min',
+      title: 'الوقت المتوقع للرحلة',
+      value: '45 دقيقة',
       icon: Clock,
       color: 'text-warning',
       bgColor: 'bg-warning/10'
@@ -52,29 +52,29 @@ const CaptainDashboard: React.FC = () => {
 
   const todaySchedule = [
     {
-      time: '07:00 AM',
-      location: 'Al Noor District',
+      time: '07:00 ص',
+      location: 'حي النور الشمالي',
       students: 6,
       status: 'completed',
       type: 'pickup'
     },
     {
-      time: '07:15 AM',
-      location: 'Al Azhar Street',
+      time: '07:15 ص',
+      location: 'شارع الأزهر الرئيسي',
       students: 4,
       status: 'completed',
       type: 'pickup'
     },
     {
-      time: '07:30 AM',
-      location: 'City Center',
+      time: '07:30 ص',
+      location: 'مركز المدينة التجاري',
       students: 8,
       status: 'current',
       type: 'pickup'
     },
     {
-      time: '07:45 AM',
-      location: 'Green Valley',
+      time: '07:45 ص',
+      location: 'الوادي الأخضر السكني',
       students: 6,
       status: 'upcoming',
       type: 'pickup'
@@ -83,32 +83,32 @@ const CaptainDashboard: React.FC = () => {
 
   const recentStudents = [
     {
-      name: 'Ahmed Hassan',
-      grade: 'Grade 8',
-      time: '07:42 AM',
+      name: 'أحمد حسن محمود',
+      grade: 'الصف الثامن',
+      time: '07:42 ص',
       status: 'boarded',
-      location: 'Al Noor St.'
+      location: 'شارع النور'
     },
     {
-      name: 'Fatima Al-Zahra',
-      grade: 'Grade 6',
-      time: '07:40 AM',
+      name: 'فاطمة الزهراء أحمد',
+      grade: 'الصف السادس',
+      time: '07:40 ص',
       status: 'boarded',
-      location: 'Al Noor St.'
+      location: 'شارع النور'
     },
     {
-      name: 'Omar Abdullah',
-      grade: 'Grade 7',
-      time: '07:38 AM',
+      name: 'عمر عبد الله سالم',
+      grade: 'الصف السابع',
+      time: '07:38 ص',
       status: 'boarded',
-      location: 'Al Noor St.'
+      location: 'شارع النور'
     },
     {
-      name: 'Maryam Said',
-      grade: 'Grade 5',
-      time: '07:35 AM',
+      name: 'مريم سعيد علي',
+      grade: 'الصف الخامس',
+      time: '07:35 ص',
       status: 'boarded',
-      location: 'Al Azhar St.'
+      location: 'شارع الأزهر'
     }
   ];
 
@@ -123,19 +123,19 @@ const CaptainDashboard: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-secondary/80" />
         <div className="relative p-8 text-white">
           <h1 className="text-3xl font-bold mb-2">
-            Good Morning, Captain! 🚌
+            صباح الخير أيها الكابتن! 🚌
           </h1>
           <p className="text-lg opacity-90">
-            Ready to ensure safe transportation for 24 students today
+            مستعد لضمان النقل الآمن لـ 24 طالباً اليوم بإذن الله
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button variant="glass" size="lg">
               <Navigation className="w-5 h-5" />
-              Start Route
+              بدء المسار اليومي
             </Button>
             <Button variant="glass" size="lg">
               <UserCheck className="w-5 h-5" />
-              Take Attendance
+              تسجيل الحضور
             </Button>
           </div>
         </div>
@@ -173,10 +173,10 @@ const CaptainDashboard: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse">
               <Calendar className="w-5 h-5 text-secondary" />
-              <span>Today's Schedule</span>
+              <span>جدول اليوم المفصل</span>
             </CardTitle>
             <CardDescription>
-              Pickup points and estimated times
+              نقاط الاستلام والأوقات المتوقعة للوصول
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -209,14 +209,14 @@ const CaptainDashboard: React.FC = () => {
                   <div>
                     <p className="font-medium text-foreground">{stop.location}</p>
                     <p className="text-sm text-muted-foreground">
-                      {stop.time} • {stop.students} students
+                      {stop.time} • {stop.students} طالب
                     </p>
                   </div>
                 </div>
                 {stop.status === 'current' && (
                   <Button variant="captain" size="sm">
                     <UserCheck className="w-4 h-4" />
-                    Mark Complete
+                    تم الإنجاز
                   </Button>
                 )}
               </div>
@@ -229,10 +229,10 @@ const CaptainDashboard: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse">
               <Users className="w-5 h-5 text-primary" />
-              <span>Recent Activity</span>
+              <span>النشاط الأخير للطلاب</span>
             </CardTitle>
             <CardDescription>
-              Latest student pickups and drop-offs
+              آخر عمليات الاستلام والتوصيل للطلاب
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -254,7 +254,7 @@ const CaptainDashboard: React.FC = () => {
                 </div>
                 <div className="text-right">
                   <div className="px-2 py-1 rounded-full text-xs font-medium bg-success/10 text-success">
-                    Boarded
+                    تم الصعود
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
                     {student.time}
@@ -264,7 +264,7 @@ const CaptainDashboard: React.FC = () => {
             ))}
             <Button variant="captain" className="w-full mt-4">
               <Users className="w-4 h-4" />
-              View All Students
+              عرض جميع الطلاب
             </Button>
           </CardContent>
         </Card>
@@ -275,25 +275,25 @@ const CaptainDashboard: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse">
             <Bus className="w-5 h-5 text-warning" />
-            <span>Quick Actions</span>
+            <span>الإجراءات السريعة</span>
           </CardTitle>
           <CardDescription>
-            Common tasks for bus captains
+            المهام الشائعة لكابتن الحافلة
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Button variant="captain" className="h-16 flex-col space-y-2">
               <AlertTriangle className="w-6 h-6" />
-              <span>Report Delay</span>
+              <span>إبلاغ عن تأخير</span>
             </Button>
             <Button variant="tracking" className="h-16 flex-col space-y-2">
               <Navigation className="w-6 h-6" />
-              <span>Update Location</span>
+              <span>تحديث الموقع</span>
             </Button>
             <Button variant="parent" className="h-16 flex-col space-y-2">
               <UserCheck className="w-6 h-6" />
-              <span>Emergency Contact</span>
+              <span>اتصال طوارئ</span>
             </Button>
           </div>
         </CardContent>

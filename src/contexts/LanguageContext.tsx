@@ -1,110 +1,77 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Language = 'en' | 'ar';
+type Language = 'ar';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  dir: 'ltr' | 'rtl';
+  dir: 'rtl';
   translations: Record<string, string>;
 }
 
 const translations = {
-  en: {
-    // Navigation
-    'nav.dashboard': 'Dashboard',
-    'nav.tracking': 'Bus Tracking',
-    'nav.students': 'Students',
-    'nav.payments': 'Payments',
-    'nav.routes': 'Routes',
-    'nav.reports': 'Reports',
-    'nav.settings': 'Settings',
-    
-    // Dashboard
-    'dashboard.welcome': 'Welcome to SafeRoute',
-    'dashboard.subtitle': 'School Bus Tracking & Payment System',
-    'dashboard.totalStudents': 'Total Students',
-    'dashboard.activebuses': 'Active Buses',
-    'dashboard.todayPickups': 'Today\'s Pickups',
-    'dashboard.totalRevenue': 'Total Revenue',
-    
-    // Tracking
-    'tracking.title': 'Live Bus Tracking',
-    'tracking.subtitle': 'Real-time location of all school buses',
-    'tracking.busStatus': 'Bus Status',
-    'tracking.onRoute': 'On Route',
-    'tracking.delayed': 'Delayed',
-    'tracking.arrived': 'Arrived',
-    
-    // Students
-    'students.title': 'Student Management',
-    'students.addStudent': 'Add Student',
-    'students.name': 'Name',
-    'students.grade': 'Grade',
-    'students.bus': 'Bus Number',
-    'students.status': 'Status',
-    
-    // Common
-    'common.loading': 'Loading...',
-    'common.save': 'Save',
-    'common.cancel': 'Cancel',
-    'common.edit': 'Edit',
-    'common.delete': 'Delete',
-    'common.view': 'View',
-    'common.search': 'Search...',
-    
-    // Roles
-    'role.parent': 'Parent',
-    'role.captain': 'Captain',
-    'role.admin': 'Admin'
-  },
   ar: {
     // Navigation
-    'nav.dashboard': 'لوحة التحكم',
-    'nav.tracking': 'تتبع الحافلة',
-    'nav.students': 'الطلاب',
-    'nav.payments': 'المدفوعات',
-    'nav.routes': 'المسارات',
-    'nav.reports': 'التقارير',
-    'nav.settings': 'الإعدادات',
+    'nav.dashboard': 'لوحة التحكم الرئيسية',
+    'nav.tracking': 'تتبع الحافلات المباشر',
+    'nav.students': 'إدارة الطلاب',
+    'nav.payments': 'نظام المدفوعات',
+    'nav.routes': 'مسارات الحافلات',
+    'nav.reports': 'التقارير والإحصائيات',
+    'nav.settings': 'الإعدادات العامة',
     
     // Dashboard
-    'dashboard.welcome': 'مرحباً بك في الطريق الآمن',
-    'dashboard.subtitle': 'نظام تتبع الحافلات المدرسية والمدفوعات',
-    'dashboard.totalStudents': 'إجمالي الطلاب',
-    'dashboard.activebuses': 'الحافلات النشطة',
-    'dashboard.todayPickups': 'رحلات اليوم',
-    'dashboard.totalRevenue': 'إجمالي الإيرادات',
+    'dashboard.welcome': 'مرحباً بك في منصة الطريق الآمن',
+    'dashboard.subtitle': 'نظام تتبع ومراقبة الحافلات المدرسية والمدفوعات الإلكترونية',
+    'dashboard.totalStudents': 'إجمالي عدد الطلاب',
+    'dashboard.activebuses': 'الحافلات النشطة حالياً',
+    'dashboard.todayPickups': 'رحلات اليوم المكتملة',
+    'dashboard.totalRevenue': 'إجمالي الإيرادات الشهرية',
     
     // Tracking
-    'tracking.title': 'تتبع الحافلة المباشر',
-    'tracking.subtitle': 'الموقع الحقيقي لجميع الحافلات المدرسية',
-    'tracking.busStatus': 'حالة الحافلة',
-    'tracking.onRoute': 'في الطريق',
-    'tracking.delayed': 'متأخرة',
-    'tracking.arrived': 'وصلت',
+    'tracking.title': 'نظام التتبع المباشر للحافلات',
+    'tracking.subtitle': 'مراقبة الموقع الحقيقي لجميع الحافلات المدرسية لحظة بلحظة',
+    'tracking.busStatus': 'حالة الحافلة الحالية',
+    'tracking.onRoute': 'في المسار المحدد',
+    'tracking.delayed': 'متأخرة عن الموعد',
+    'tracking.arrived': 'وصلت للوجهة',
     
     // Students
-    'students.title': 'إدارة الطلاب',
-    'students.addStudent': 'إضافة طالب',
-    'students.name': 'الاسم',
-    'students.grade': 'الصف',
-    'students.bus': 'رقم الحافلة',
-    'students.status': 'الحالة',
+    'students.title': 'نظام إدارة الطلاب الشامل',
+    'students.addStudent': 'إضافة طالب جديد',
+    'students.name': 'الاسم الكامل',
+    'students.grade': 'الصف الدراسي',
+    'students.bus': 'رقم الحافلة المخصصة',
+    'students.status': 'الحالة الحالية',
     
     // Common
-    'common.loading': 'جاري التحميل...',
-    'common.save': 'حفظ',
-    'common.cancel': 'إلغاء',
-    'common.edit': 'تعديل',
-    'common.delete': 'حذف',
-    'common.view': 'عرض',
-    'common.search': 'بحث...',
+    'common.loading': 'جاري التحميل والمعالجة...',
+    'common.save': 'حفظ المعلومات',
+    'common.cancel': 'إلغاء العملية',
+    'common.edit': 'تعديل البيانات',
+    'common.delete': 'حذف نهائي',
+    'common.view': 'عرض التفاصيل',
+    'common.search': 'البحث في النظام...',
     
     // Roles
-    'role.parent': 'ولي أمر',
-    'role.captain': 'كابتن',
-    'role.admin': 'مدير'
+    'role.parent': 'ولي الأمر',
+    'role.captain': 'كابتن الحافلة',
+    'role.admin': 'مدير النظام',
+    
+    // Additional translations
+    'welcome.morning': 'صباح الخير',
+    'welcome.afternoon': 'مساء الخير',
+    'status.active': 'نشط',
+    'status.inactive': 'غير نشط',
+    'status.onboard': 'في الحافلة',
+    'status.atschool': 'في المدرسة',
+    'status.athome': 'في المنزل',
+    'notification.pickup': 'تم استلام الطالب',
+    'notification.dropoff': 'تم توصيل الطالب',
+    'notification.delay': 'تأخير في الرحلة',
+    'payment.paid': 'تم الدفع',
+    'payment.pending': 'في انتظار الدفع',
+    'payment.overdue': 'متأخر عن الدفع'
   }
 };
 
@@ -119,28 +86,20 @@ export const useLanguage = () => {
 };
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>('ar');
 
   useEffect(() => {
-    // Load language from localStorage or browser
-    const saved = localStorage.getItem('safeRoute-language') as Language;
-    if (saved && (saved === 'en' || saved === 'ar')) {
-      setLanguage(saved);
-    }
+    // Always set to Arabic and RTL
+    document.documentElement.dir = 'rtl';
+    document.documentElement.lang = 'ar';
+    document.documentElement.className = 'arabic-text';
   }, []);
-
-  useEffect(() => {
-    // Save language preference and update document
-    localStorage.setItem('safeRoute-language', language);
-    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = language;
-  }, [language]);
 
   const value: LanguageContextType = {
     language,
     setLanguage,
-    dir: language === 'ar' ? 'rtl' : 'ltr',
-    translations: translations[language]
+    dir: 'rtl',
+    translations: translations.ar
   };
 
   return (

@@ -112,13 +112,15 @@
     --shadow-card: 0 10px 30px -5px hsl(217 91% 65% / 0.2);
   }
 
-  /* RTL Support */
-  [dir="rtl"] {
+  /* RTL Support - Always Arabic */
+  html {
     font-family: 'Cairo', sans-serif;
+    direction: rtl;
   }
 
-  [dir="ltr"] {
-    font-family: 'Inter', sans-serif;
+  body {
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
   }
 }
 

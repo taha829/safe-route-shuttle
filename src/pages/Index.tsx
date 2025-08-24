@@ -41,62 +41,67 @@ const Index = () => {
               <div className="p-6">
                 <div className="max-w-4xl mx-auto text-center">
                   <h2 className="text-2xl font-bold text-foreground mb-4">
-                    {currentPage.charAt(0).toUpperCase() + currentPage.slice(1)} Page
+                    صفحة {currentPage === 'tracking' ? 'تتبع الحافلات' :
+                            currentPage === 'students' ? 'إدارة الطلاب' :
+                            currentPage === 'payments' ? 'نظام المدفوعات' :
+                            currentPage === 'routes' ? 'إدارة المسارات' :
+                            currentPage === 'reports' ? 'التقارير والإحصائيات' :
+                            currentPage === 'settings' ? 'الإعدادات العامة' : currentPage}
                   </h2>
                   <p className="text-muted-foreground mb-8">
-                    This page is under development. The {currentPage} functionality will be available soon.
+                    هذه الصفحة قيد التطوير حالياً. ستكون متاحة قريباً بإذن الله
                   </p>
                   <div className="glass-card p-8 rounded-2xl">
                     <h3 className="text-lg font-semibold text-foreground mb-4">
-                      Coming Soon Features:
+                      الميزات القادمة قريباً:
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
                       {currentPage === 'tracking' && (
                         <>
-                          <div>• Real-time GPS tracking</div>
-                          <div>• Route optimization</div>
-                          <div>• ETA predictions</div>
-                          <div>• Geofencing alerts</div>
+                          <div>• تتبع GPS المباشر والفوري</div>
+                          <div>• تحسين المسارات تلقائياً</div>
+                          <div>• توقع أوقات الوصول الدقيقة</div>
+                          <div>• تنبيهات الحدود الجغرافية</div>
                         </>
                       )}
                       {currentPage === 'students' && (
                         <>
-                          <div>• Student management</div>
-                          <div>• Attendance tracking</div>
-                          <div>• Parent contact info</div>
-                          <div>• Medical information</div>
+                          <div>• إدارة شاملة للطلاب</div>
+                          <div>• تتبع الحضور والغياب</div>
+                          <div>• معلومات الاتصال بأولياء الأمور</div>
+                          <div>• المعلومات الطبية والصحية</div>
                         </>
                       )}
                       {currentPage === 'payments' && (
                         <>
-                          <div>• Online payment processing</div>
-                          <div>• Subscription management</div>
-                          <div>• Receipt generation</div>
-                          <div>• Payment history</div>
+                          <div>• معالجة المدفوعات الإلكترونية</div>
+                          <div>• إدارة الاشتراكات الشهرية</div>
+                          <div>• إنشاء الإيصالات التلقائية</div>
+                          <div>• سجل المدفوعات التفصيلي</div>
                         </>
                       )}
                       {currentPage === 'routes' && (
                         <>
-                          <div>• Route planning</div>
-                          <div>• Stop optimization</div>
-                          <div>• Traffic integration</div>
-                          <div>• Schedule management</div>
+                          <div>• تخطيط المسارات الذكية</div>
+                          <div>• تحسين نقاط التوقف</div>
+                          <div>• التكامل مع بيانات المرور</div>
+                          <div>• إدارة الجداول الزمنية</div>
                         </>
                       )}
                       {currentPage === 'reports' && (
                         <>
-                          <div>• Analytics dashboard</div>
-                          <div>• Custom reports</div>
-                          <div>• Data export</div>
-                          <div>• Performance metrics</div>
+                          <div>• لوحة التحليلات المتقدمة</div>
+                          <div>• تقارير مخصصة ومفصلة</div>
+                          <div>• تصدير البيانات بصيغ متعددة</div>
+                          <div>• مقاييس الأداء الشاملة</div>
                         </>
                       )}
                       {currentPage === 'settings' && (
                         <>
-                          <div>• System configuration</div>
-                          <div>• User preferences</div>
-                          <div>• Notification settings</div>
-                          <div>• Security options</div>
+                          <div>• إعدادات النظام الأساسية</div>
+                          <div>• تفضيلات المستخدم الشخصية</div>
+                          <div>• إعدادات الإشعارات والتنبيهات</div>
+                          <div>• خيارات الأمان والحماية</div>
                         </>
                       )}
                     </div>
