@@ -19,6 +19,7 @@ const translations = {
     'nav.routes': 'مسارات الحافلات',
     'nav.reports': 'التقارير والإحصائيات',
     'nav.settings': 'الإعدادات العامة',
+    'nav.news': 'آخر الأخبار',
     
     // Dashboard
     'dashboard.welcome': 'مرحباً بك في منصة الطريق الآمن',

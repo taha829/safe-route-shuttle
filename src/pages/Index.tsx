@@ -5,6 +5,7 @@ import Navigation from '@/components/Navigation';
 import ParentDashboard from '@/components/dashboards/ParentDashboard';
 import CaptainDashboard from '@/components/dashboards/CaptainDashboard';
 import AdminDashboard from '@/components/dashboards/AdminDashboard';
+import SchoolNewsFeed from '@/pages/SchoolNewsFeed';
 
 const Index = () => {
   const [currentRole, setCurrentRole] = useState<'parent' | 'captain' | 'admin'>('parent');
@@ -37,6 +38,8 @@ const Index = () => {
           <main className="transition-all duration-300">
             {currentPage === 'dashboard' ? (
               renderDashboard()
+            ) : currentPage === 'news' ? (
+              <SchoolNewsFeed />
             ) : (
               <div className="p-6">
                 <div className="max-w-4xl mx-auto text-center">
@@ -45,6 +48,7 @@ const Index = () => {
                             currentPage === 'students' ? 'إدارة الطلاب' :
                             currentPage === 'payments' ? 'نظام المدفوعات' :
                             currentPage === 'routes' ? 'إدارة المسارات' :
+                            currentPage === 'news' ? 'آخر الأخبار' :
                             currentPage === 'reports' ? 'التقارير والإحصائيات' :
                             currentPage === 'settings' ? 'الإعدادات العامة' : currentPage}
                   </h2>

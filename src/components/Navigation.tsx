@@ -42,6 +42,7 @@ const Navigation: React.FC<NavigationProps> = ({
     { key: 'students', icon: Users, label: t('nav.students') },
     { key: 'payments', icon: CreditCard, label: t('nav.payments') },
     { key: 'routes', icon: Route, label: t('nav.routes') },
+    { key: 'news', icon: FileText, label: t('nav.news') },
     { key: 'reports', icon: FileText, label: t('nav.reports') },
     { key: 'settings', icon: Settings, label: t('nav.settings') },
   ];
