@@ -22,6 +22,7 @@ const buttonVariants = cva(
         bus: "bg-gradient-primary text-white hover:shadow-bus transform hover:scale-105 animate-pulse-glow",
         captain: "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-card-custom hover:shadow-lg",
         parent: "bg-success text-success-foreground hover:bg-success/90 shadow-md hover:shadow-lg",
+        school: "bg-gradient-school text-white hover:shadow-lg transform hover:scale-105 font-semibold",
         admin: "bg-gradient-hero text-white hover:shadow-lg transform hover:scale-105 font-semibold",
         tracking: "bg-warning text-warning-foreground hover:bg-warning/90 animate-tracking shadow-md",
         glass: "glass-card text-foreground hover:bg-white/10 border-white/20",

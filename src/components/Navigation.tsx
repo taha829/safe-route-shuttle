@@ -19,8 +19,8 @@ import {
 } from 'lucide-react';
 
 interface NavigationProps {
-  currentRole: 'parent' | 'captain' | 'admin';
-  onRoleChange: (role: 'parent' | 'captain' | 'admin') => void;
+  currentRole: 'parent' | 'captain' | 'school' | 'admin';
+  onRoleChange: (role: 'parent' | 'captain' | 'school' | 'admin') => void;
   currentPage: string;
   onPageChange: (page: string) => void;
 }
@@ -93,7 +93,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <div className="flex items-center space-x-3 rtl:space-x-reverse">
             {/* Role Switcher */}
             <div className="hidden md:flex bg-muted rounded-lg p-1">
-              {(['parent', 'captain', 'admin'] as const).map((role) => (
+              {(['parent', 'captain', 'school', 'admin'] as const).map((role) => (
                 <Button
                   key={role}
                   variant={currentRole === role ? role : 'ghost'}
@@ -147,7 +147,7 @@ const Navigation: React.FC<NavigationProps> = ({
           <div className="lg:hidden border-t border-border mt-2 py-4 space-y-2">
             {/* Mobile Role Switcher */}
             <div className="flex space-x-2 rtl:space-x-reverse mb-4">
-              {(['parent', 'captain', 'admin'] as const).map((role) => (
+              {(['parent', 'captain', 'school', 'admin'] as const).map((role) => (
                 <Button
                   key={role}
                   variant={currentRole === role ? role : 'outline'}

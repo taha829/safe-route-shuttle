@@ -48,6 +48,24 @@ const translations = {
     // Common
     'common.loading': 'جاري التحميل والمعالجة...',
     'common.save': 'حفظ المعلومات',
+    
+    // School Dashboard
+    'school.dashboard': 'لوحة تحكم المدرسة',
+    'school.title': 'إدارة شاملة للمدرسة',
+    'school.createPost': 'إنشاء منشور جديد',
+    'school.manageStudents': 'إدارة الطلاب',
+    'school.busFleet': 'أسطول الحافلات',
+    'school.financial': 'التقارير المالية',
+    'school.analytics': 'الإحصائيات والتحليلات',
+    
+    // GPS Tracking
+    'gps.title': 'تتبع GPS المباشر',
+    'gps.realTime': 'المراقبة في الوقت الفعلي',
+    'gps.busLocation': 'موقع الحافلة الحالي',
+    'gps.route': 'المسار المحدد',
+    'gps.eta': 'الوقت المقدر للوصول',
+    'gps.speed': 'السرعة الحالية',
+    'gps.lastUpdate': 'آخر تحديث',
     'common.cancel': 'إلغاء العملية',
     'common.edit': 'تعديل البيانات',
     'common.delete': 'حذف نهائي',
@@ -57,6 +75,7 @@ const translations = {
     // Roles
     'role.parent': 'ولي الأمر',
     'role.captain': 'كابتن الحافلة',
+    'role.school': 'إدارة المدرسة',
     'role.admin': 'مدير النظام',
     
     // Additional translations

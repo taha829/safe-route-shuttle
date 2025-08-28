@@ -6,9 +6,11 @@ import ParentDashboard from '@/components/dashboards/ParentDashboard';
 import CaptainDashboard from '@/components/dashboards/CaptainDashboard';
 import AdminDashboard from '@/components/dashboards/AdminDashboard';
 import SchoolNewsFeed from '@/pages/SchoolNewsFeed';
+import SchoolDashboard from '@/components/dashboards/SchoolDashboard';
+import LiveTracking from '@/pages/LiveTracking';
 
 const Index = () => {
-  const [currentRole, setCurrentRole] = useState<'parent' | 'captain' | 'admin'>('parent');
+  const [currentRole, setCurrentRole] = useState<'parent' | 'captain' | 'school' | 'admin'>('parent');
   const [currentPage, setCurrentPage] = useState('dashboard');
 
   const renderDashboard = () => {
@@ -17,6 +19,8 @@ const Index = () => {
         return <ParentDashboard />;
       case 'captain':
         return <CaptainDashboard />;
+      case 'school':
+        return <SchoolDashboard />;
       case 'admin':
         return <AdminDashboard />;
       default:
@@ -40,6 +44,8 @@ const Index = () => {
               renderDashboard()
             ) : currentPage === 'news' ? (
               <SchoolNewsFeed />
+            ) : currentPage === 'tracking' ? (
+              <LiveTracking />
             ) : (
               <div className="p-6">
                 <div className="max-w-4xl mx-auto text-center">
