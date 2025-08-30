@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { 
@@ -14,7 +19,11 @@ import {
   LogOut,
   Sun,
   Moon,
-  PlusCircle
+  PlusCircle,
+  Bus,
+  Phone,
+  Mail,
+  MapPin
 } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -32,6 +41,9 @@ const Dashboard = () => {
   const { theme, toggleTheme } = useTheme();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedModal, setSelectedModal] = useState<string | null>(null);
+  const [formData, setFormData] = useState<any>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const checkUserAndProfile = async () => {
@@ -92,13 +104,55 @@ const Dashboard = () => {
   };
 
   const handleRoleSelection = (role: string) => {
-    if (role === 'teacher') {
-      navigate('/teacher-dashboard');
-    } else {
+    setSelectedModal(role);
+    setFormData({});
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev: any) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmitRole = async () => {
+    if (!profile) return;
+    
+    setIsSubmitting(true);
+    try {
+      switch (selectedModal) {
+        case 'teacher':
+          const { error: teacherError } = await supabase
+            .from('teachers')
+            .insert({
+              user_id: profile.user_id,
+              subject: formData.subject,
+              bio: formData.bio,
+              experience_years: parseInt(formData.experience_years) || 0,
+              hourly_rate: parseFloat(formData.hourly_rate) || 0,
+            });
+          if (teacherError) throw teacherError;
+          navigate('/teacher-dashboard');
+          break;
+          
+        case 'captain':
+        case 'parent':
+        case 'school_admin':
+        case 'admin':
+          toast({
+            title: 'قريباً',
+            description: `لوحة تحكم ${selectedModal} ستكون متاحة قريباً`,
+          });
+          break;
+      }
+      
+      setSelectedModal(null);
+    } catch (error) {
+      console.error('Error:', error);
       toast({
-        title: 'قريباً',
-        description: `لوحة تحكم ${role} ستكون متاحة قريباً`,
+        title: 'خطأ',
+        description: 'حدث خطأ أثناء حفظ البيانات',
+        variant: 'destructive',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -262,6 +316,335 @@ const Dashboard = () => {
           </Card>
         </div>
       </div>
+
+      {/* Teacher Modal */}
+      <Dialog open={selectedModal === 'teacher'} onOpenChange={() => setSelectedModal(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GraduationCap className="h-5 w-5 text-primary" />
+              بيانات المعلم
+            </DialogTitle>
+            <DialogDescription>
+              أدخل بياناتك كمعلم للوصول إلى لوحة التحكم
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="subject">المادة الدراسية</Label>
+              <Input
+                id="subject"
+                placeholder="مثال: الرياضيات، العلوم، اللغة العربية"
+                value={formData.subject || ''}
+                onChange={(e) => handleInputChange('subject', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="experience">سنوات الخبرة</Label>
+              <Input
+                id="experience"
+                type="number"
+                placeholder="عدد سنوات الخبرة"
+                value={formData.experience_years || ''}
+                onChange={(e) => handleInputChange('experience_years', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="rate">السعر بالساعة (ريال)</Label>
+              <Input
+                id="rate"
+                type="number"
+                placeholder="السعر المطلوب للساعة الواحدة"
+                value={formData.hourly_rate || ''}
+                onChange={(e) => handleInputChange('hourly_rate', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="bio">نبذة تعريفية</Label>
+              <Textarea
+                id="bio"
+                placeholder="اكتب نبذة مختصرة عن خبرتك ومؤهلاتك التعليمية"
+                value={formData.bio || ''}
+                onChange={(e) => handleInputChange('bio', e.target.value)}
+                rows={3}
+              />
+            </div>
+            <Button 
+              onClick={handleSubmitRole} 
+              className="w-full"
+              disabled={isSubmitting || !formData.subject}
+            >
+              {isSubmitting ? 'جارٍ الحفظ...' : 'دخول لوحة التحكم'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Captain Modal */}
+      <Dialog open={selectedModal === 'captain'} onOpenChange={() => setSelectedModal(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Bus className="h-5 w-5 text-primary" />
+              بيانات الكابتن
+            </DialogTitle>
+            <DialogDescription>
+              أدخل بياناتك ككابتن حافلة للوصول إلى لوحة التحكم
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="bus_number">رقم الحافلة</Label>
+              <Input
+                id="bus_number"
+                placeholder="رقم الحافلة المخصصة لك"
+                value={formData.bus_number || ''}
+                onChange={(e) => handleInputChange('bus_number', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="route">المسار</Label>
+              <Input
+                id="route"
+                placeholder="المسار الذي تخدمه"
+                value={formData.route || ''}
+                onChange={(e) => handleInputChange('route', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="license">رقم الرخصة</Label>
+              <Input
+                id="license"
+                placeholder="رقم رخصة القيادة"
+                value={formData.license || ''}
+                onChange={(e) => handleInputChange('license', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="phone">رقم الهاتف</Label>
+              <Input
+                id="phone"
+                placeholder="رقم الهاتف للتواصل"
+                value={formData.phone || ''}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+              />
+            </div>
+            <Button 
+              onClick={handleSubmitRole} 
+              className="w-full"
+              disabled={isSubmitting || !formData.bus_number}
+            >
+              {isSubmitting ? 'جارٍ الحفظ...' : 'دخول لوحة التحكم'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Parent Modal */}
+      <Dialog open={selectedModal === 'parent'} onOpenChange={() => setSelectedModal(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <UserCheck className="h-5 w-5 text-primary" />
+              بيانات ولي الأمر
+            </DialogTitle>
+            <DialogDescription>
+              أدخل بياناتك كولي أمر للوصول إلى لوحة التحكم
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="national_id">رقم الهوية الوطنية</Label>
+              <Input
+                id="national_id"
+                placeholder="رقم الهوية الوطنية"
+                value={formData.national_id || ''}
+                onChange={(e) => handleInputChange('national_id', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="relation">صلة القرابة</Label>
+              <Select value={formData.relation || ''} onValueChange={(value) => handleInputChange('relation', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر صلة القرابة" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="father">الأب</SelectItem>
+                  <SelectItem value="mother">الأم</SelectItem>
+                  <SelectItem value="guardian">الوصي</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="work">مكان العمل</Label>
+              <Input
+                id="work"
+                placeholder="مكان العمل"
+                value={formData.work || ''}
+                onChange={(e) => handleInputChange('work', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="address">العنوان</Label>
+              <Textarea
+                id="address"
+                placeholder="العنوان الكامل"
+                value={formData.address || ''}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+                rows={2}
+              />
+            </div>
+            <Button 
+              onClick={handleSubmitRole} 
+              className="w-full"
+              disabled={isSubmitting || !formData.national_id}
+            >
+              {isSubmitting ? 'جارٍ الحفظ...' : 'دخول لوحة التحكم'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* School Admin Modal */}
+      <Dialog open={selectedModal === 'school_admin'} onOpenChange={() => setSelectedModal(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Building className="h-5 w-5 text-primary" />
+              بيانات إدارة المدرسة
+            </DialogTitle>
+            <DialogDescription>
+              أدخل بياناتك كمدير مدرسة للوصول إلى لوحة التحكم
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="school_name">اسم المدرسة</Label>
+              <Input
+                id="school_name"
+                placeholder="اسم المدرسة"
+                value={formData.school_name || ''}
+                onChange={(e) => handleInputChange('school_name', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="position">المنصب</Label>
+              <Select value={formData.position || ''} onValueChange={(value) => handleInputChange('position', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر المنصب" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="principal">مدير المدرسة</SelectItem>
+                  <SelectItem value="vice_principal">وكيل المدرسة</SelectItem>
+                  <SelectItem value="coordinator">منسق</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="education_level">المرحلة التعليمية</Label>
+              <Select value={formData.education_level || ''} onValueChange={(value) => handleInputChange('education_level', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر المرحلة" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="elementary">الابتدائية</SelectItem>
+                  <SelectItem value="middle">المتوسطة</SelectItem>
+                  <SelectItem value="high">الثانوية</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="employee_id">رقم الموظف</Label>
+              <Input
+                id="employee_id"
+                placeholder="رقم الموظف في المدرسة"
+                value={formData.employee_id || ''}
+                onChange={(e) => handleInputChange('employee_id', e.target.value)}
+              />
+            </div>
+            <Button 
+              onClick={handleSubmitRole} 
+              className="w-full"
+              disabled={isSubmitting || !formData.school_name}
+            >
+              {isSubmitting ? 'جارٍ الحفظ...' : 'دخول لوحة التحكم'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* General Admin Modal */}
+      <Dialog open={selectedModal === 'admin'} onOpenChange={() => setSelectedModal(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              بيانات الإدارة العامة
+            </DialogTitle>
+            <DialogDescription>
+              أدخل بياناتك كمدير عام للوصول إلى لوحة التحكم
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="department">القسم</Label>
+              <Select value={formData.department || ''} onValueChange={(value) => handleInputChange('department', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر القسم" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="it">تقنية المعلومات</SelectItem>
+                  <SelectItem value="education">الشؤون التعليمية</SelectItem>
+                  <SelectItem value="finance">الشؤون المالية</SelectItem>
+                  <SelectItem value="hr">الموارد البشرية</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="admin_level">مستوى الإدارة</Label>
+              <Select value={formData.admin_level || ''} onValueChange={(value) => handleInputChange('admin_level', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر المستوى" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="super_admin">مدير عام</SelectItem>
+                  <SelectItem value="admin">مدير</SelectItem>
+                  <SelectItem value="supervisor">مشرف</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="employee_code">كود الموظف</Label>
+              <Input
+                id="employee_code"
+                placeholder="كود الموظف"
+                value={formData.employee_code || ''}
+                onChange={(e) => handleInputChange('employee_code', e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="access_level">مستوى الصلاحية</Label>
+              <Select value={formData.access_level || ''} onValueChange={(value) => handleInputChange('access_level', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="اختر مستوى الصلاحية" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="full">صلاحية كاملة</SelectItem>
+                  <SelectItem value="limited">صلاحية محدودة</SelectItem>
+                  <SelectItem value="read_only">قراءة فقط</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button 
+              onClick={handleSubmitRole} 
+              className="w-full"
+              disabled={isSubmitting || !formData.department}
+            >
+              {isSubmitting ? 'جارٍ الحفظ...' : 'دخول لوحة التحكم'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
