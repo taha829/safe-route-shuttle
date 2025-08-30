@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
+import CreateLessonModal from '@/components/modals/CreateLessonModal';
+import CreateQuizModal from '@/components/modals/CreateQuizModal';
 import { 
   BookOpen,
   Users,
@@ -70,6 +72,8 @@ const TeacherDashboard = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showLessonModal, setShowLessonModal] = useState(false);
+  const [showQuizModal, setShowQuizModal] = useState(false);
 
   useEffect(() => {
     const checkTeacherProfile = async () => {
@@ -140,6 +144,30 @@ const TeacherDashboard = () => {
 
     checkTeacherProfile();
   }, [navigate, toast]);
+
+  const refreshLessons = async () => {
+    if (!teacherProfile) return;
+    
+    const { data: lessonsData } = await supabase
+      .from('lessons')
+      .select('*')
+      .eq('teacher_id', teacherProfile.id)
+      .order('created_at', { ascending: false });
+
+    if (lessonsData) setLessons(lessonsData);
+  };
+
+  const refreshQuizzes = async () => {
+    if (!teacherProfile) return;
+    
+    const { data: quizzesData } = await supabase
+      .from('quizzes')
+      .select('*')
+      .eq('teacher_id', teacherProfile.id)
+      .order('created_at', { ascending: false });
+
+    if (quizzesData) setQuizzes(quizzesData);
+  };
 
   const statsCards = [
     {
@@ -338,7 +366,7 @@ const TeacherDashboard = () => {
           <TabsContent value="lessons" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">إدارة الدروس</h2>
-              <Button>
+              <Button onClick={() => setShowLessonModal(true)}>
                 <Plus className="h-4 w-4 ml-2" />
                 درس جديد
               </Button>
@@ -386,7 +414,7 @@ const TeacherDashboard = () => {
           <TabsContent value="quizzes" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">إدارة الاختبارات</h2>
-              <Button>
+              <Button onClick={() => setShowQuizModal(true)}>
                 <Plus className="h-4 w-4 ml-2" />
                 اختبار جديد
               </Button>
@@ -499,6 +527,25 @@ const TeacherDashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* مودالز إنشاء المحتوى */}
+      {teacherProfile && (
+        <>
+          <CreateLessonModal
+            open={showLessonModal}
+            onOpenChange={setShowLessonModal}
+            teacherId={teacherProfile.id}
+            onLessonCreated={refreshLessons}
+          />
+          
+          <CreateQuizModal
+            open={showQuizModal}
+            onOpenChange={setShowQuizModal}
+            teacherId={teacherProfile.id}
+            onQuizCreated={refreshQuizzes}
+          />
+        </>
+      )}
     </div>
   );
 };
