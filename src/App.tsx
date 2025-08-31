@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
+import TeacherSetup from "./pages/TeacherSetup";
 import StudentRegistration from "./pages/StudentRegistration";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
+            <Route path="/teacher-setup" element={<TeacherSetup />} />
             <Route path="/student-registration" element={<StudentRegistration />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
