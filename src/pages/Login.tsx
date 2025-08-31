@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import { GraduationCap, LogIn, UserPlus } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const Login = () => {
@@ -15,6 +15,7 @@ const Login = () => {
   const { toast } = useToast();
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -146,126 +147,140 @@ const Login = () => {
         {/* نموذج تسجيل الدخول */}
         <Card className="glass-card border-white/20">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-card-foreground">مرحباً بك</CardTitle>
+            <CardTitle className="text-2xl text-card-foreground">
+              {isSignUp ? 'إنشاء حساب جديد' : 'تسجيل الدخول'}
+            </CardTitle>
             <CardDescription className="text-muted-foreground">
-              سجل دخولك أو أنشئ حساباً جديداً للوصول إلى المنصة
+              {isSignUp 
+                ? 'أنشئ حساباً جديداً للوصول إلى المنصة' 
+                : 'سجل دخولك للوصول إلى المنصة'
+              }
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login" className="flex items-center gap-2">
-                  <LogIn className="h-4 w-4" />
-                  تسجيل دخول
-                </TabsTrigger>
-                <TabsTrigger value="signup" className="flex items-center gap-2">
-                  <UserPlus className="h-4 w-4" />
-                  حساب جديد
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="login" className="space-y-4 mt-6">
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="login-email">البريد الإلكتروني</Label>
-                    <Input
-                      id="login-email"
-                      name="email"
-                      type="email"
-                      placeholder="example@domain.com"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="text-right"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="login-password">كلمة المرور</Label>
-                    <Input
-                      id="login-password"
-                      name="password"
-                      type="password"
-                      placeholder="كلمة المرور"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                      className="text-right"
-                    />
-                  </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-primary hover:bg-primary-glow text-primary-foreground"
-                    disabled={isLoading}
+            {!isSignUp ? (
+              // نموذج تسجيل الدخول
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">البريد الإلكتروني</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="example@domain.com"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="text-right"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">كلمة المرور</Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="كلمة المرور"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                    className="text-right"
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-primary hover:bg-primary-glow text-primary-foreground"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'جارٍ تسجيل الدخول...' : 'دخول'}
+                </Button>
+                
+                <div className="text-center pt-4">
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => setIsSignUp(true)}
+                    className="text-muted-foreground hover:text-primary"
                   >
-                    {isLoading ? 'جارٍ تسجيل الدخول...' : 'دخول'}
+                    ليس لديك حساب؟ أنشئ حساباً جديداً
                   </Button>
-                </form>
-              </TabsContent>
-              
-              <TabsContent value="signup" className="space-y-4 mt-6">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-name">الاسم الكامل</Label>
-                    <Input
-                      id="signup-name"
-                      name="fullName"
-                      type="text"
-                      placeholder="الاسم الكامل"
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      required
-                      className="text-right"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">البريد الإلكتروني</Label>
-                    <Input
-                      id="signup-email"
-                      name="email"
-                      type="email"
-                      placeholder="example@domain.com"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="text-right"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">كلمة المرور</Label>
-                    <Input
-                      id="signup-password"
-                      name="password"
-                      type="password"
-                      placeholder="كلمة المرور"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                      className="text-right"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="confirm-password">تأكيد كلمة المرور</Label>
-                    <Input
-                      id="confirm-password"
-                      name="confirmPassword"
-                      type="password"
-                      placeholder="تأكيد كلمة المرور"
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      required
-                      className="text-right"
-                    />
-                  </div>
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground"
-                    disabled={isLoading}
+                </div>
+              </form>
+            ) : (
+              // نموذج إنشاء حساب جديد
+              <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">الاسم الكامل</Label>
+                  <Input
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    placeholder="الاسم الكامل"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    required
+                    className="text-right"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">البريد الإلكتروني</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="example@domain.com"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="text-right"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">كلمة المرور</Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="كلمة المرور"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                    className="text-right"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">تأكيد كلمة المرور</Label>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    placeholder="تأكيد كلمة المرور"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    required
+                    className="text-right"
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'جارٍ إنشاء الحساب...' : 'إنشاء حساب'}
+                </Button>
+                
+                <div className="text-center pt-4">
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => setIsSignUp(false)}
+                    className="text-muted-foreground hover:text-primary"
                   >
-                    {isLoading ? 'جارٍ إنشاء الحساب...' : 'إنشاء حساب'}
+                    لديك حساب؟ سجل دخولك
                   </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
+                </div>
+              </form>
+            )}
           </CardContent>
         </Card>
 
