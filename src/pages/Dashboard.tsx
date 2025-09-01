@@ -133,6 +133,10 @@ const Dashboard = () => {
           break;
           
         case 'captain':
+          // للآن سندخل مباشرة إلى لوحة التحكم بدون حفظ في قاعدة البيانات
+          navigate('/captain-dashboard');
+          break;
+          
         case 'parent':
         case 'school_admin':
         case 'admin':
@@ -279,6 +283,54 @@ const Dashboard = () => {
               </Card>
             );
           })}
+        </div>
+
+        {/* وضع التجربة السريعة */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <Card className="glass-card border-secondary/30 bg-secondary/5">
+            <CardHeader className="text-center">
+              <div className="mx-auto mb-4 p-4 rounded-full bg-gradient-secondary text-white">
+                <Users className="h-8 w-8" />
+              </div>
+              <CardTitle className="text-2xl text-card-foreground">وضع التجربة السريعة</CardTitle>
+              <CardDescription className="text-muted-foreground text-lg">
+                جرب جميع لوحات التحكم بدون الحاجة لإدخال بيانات
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <Button 
+                  onClick={() => navigate('/teacher-dashboard')}
+                  variant="outline"
+                  className="h-20 flex-col space-y-2 border-primary/30 hover:border-primary"
+                >
+                  <GraduationCap className="h-6 w-6 text-primary" />
+                  <span>تجربة لوحة المعلم</span>
+                </Button>
+                <Button 
+                  onClick={() => navigate('/captain-dashboard')}
+                  variant="outline"
+                  className="h-20 flex-col space-y-2 border-secondary/30 hover:border-secondary"
+                >
+                  <Bus className="h-6 w-6 text-secondary" />
+                  <span>تجربة لوحة الكابتن</span>
+                </Button>
+                <Button 
+                  onClick={() => navigate('/student-dashboard')}
+                  variant="outline"
+                  className="h-20 flex-col space-y-2 border-accent/30 hover:border-accent"
+                >
+                  <BookOpen className="h-6 w-6 text-accent" />
+                  <span>تجربة لوحة الطالب</span>
+                </Button>
+              </div>
+              <div className="bg-card/20 p-4 rounded-lg border border-white/20 text-center">
+                <p className="text-muted-foreground text-sm">
+                  💡 هذا الوضع يتيح لك تجربة جميع الميزات بدون الحاجة لإدخال بيانات حقيقية
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* كارد خاص للمنصة - تسجيل الطلاب */}
