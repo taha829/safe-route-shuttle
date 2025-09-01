@@ -37,6 +37,10 @@ interface Lesson {
   id: string;
   title: string;
   description: string;
+  content: string;
+  grade_id: string;
+  video_url: string;
+  attachment_url: string;
   is_published: boolean;
   created_at: string;
 }
@@ -45,6 +49,7 @@ interface Quiz {
   id: string;
   title: string;
   description: string;
+  grade_id: string;
   duration_minutes: number;
   total_marks: number;
   is_published: boolean;
@@ -74,6 +79,8 @@ const TeacherDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showLessonModal, setShowLessonModal] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
+  const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
+  const [editingQuiz, setEditingQuiz] = useState<Quiz | null>(null);
 
   useEffect(() => {
     const checkTeacherProfile = async () => {
@@ -167,6 +174,89 @@ const TeacherDashboard = () => {
       .order('created_at', { ascending: false });
 
     if (quizzesData) setQuizzes(quizzesData);
+  };
+
+  const handleDeleteLesson = async (lessonId: string, lessonTitle: string) => {
+    if (!confirm(`هل أنت متأكد من حذف الدرس "${lessonTitle}"؟`)) return;
+
+    try {
+      const { error } = await supabase
+        .from('lessons')
+        .delete()
+        .eq('id', lessonId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'تم الحذف',
+        description: 'تم حذف الدرس بنجاح',
+      });
+      
+      refreshLessons();
+    } catch (error) {
+      console.error('Error deleting lesson:', error);
+      toast({
+        title: 'خطأ',
+        description: 'فشل في حذف الدرس',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDeleteQuiz = async (quizId: string, quizTitle: string) => {
+    if (!confirm(`هل أنت متأكد من حذف الاختبار "${quizTitle}"؟`)) return;
+
+    try {
+      // حذف أسئلة الاختبار أولاً
+      const { error: questionsError } = await supabase
+        .from('quiz_questions')
+        .delete()
+        .eq('quiz_id', quizId);
+
+      if (questionsError) throw questionsError;
+
+      // حذف الاختبار
+      const { error } = await supabase
+        .from('quizzes')
+        .delete()
+        .eq('id', quizId);
+
+      if (error) throw error;
+
+      toast({
+        title: 'تم الحذف',
+        description: 'تم حذف الاختبار بنجاح',
+      });
+      
+      refreshQuizzes();
+    } catch (error) {
+      console.error('Error deleting quiz:', error);
+      toast({
+        title: 'خطأ',
+        description: 'فشل في حذف الاختبار',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleEditLesson = (lesson: Lesson) => {
+    setEditingLesson(lesson);
+    setShowLessonModal(true);
+  };
+
+  const handleEditQuiz = (quiz: Quiz) => {
+    setEditingQuiz(quiz);
+    setShowQuizModal(true);
+  };
+
+  const handleLessonModalClose = () => {
+    setShowLessonModal(false);
+    setEditingLesson(null);
+  };
+
+  const handleQuizModalClose = () => {
+    setShowQuizModal(false);
+    setEditingQuiz(null);
   };
 
   const statsCards = [
@@ -394,13 +484,23 @@ const TeacherDashboard = () => {
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" title="عرض">
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          title="تعديل"
+                          onClick={() => handleEditLesson(lesson)}
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          title="حذف"
+                          onClick={() => handleDeleteLesson(lesson.id, lesson.title)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -449,13 +549,23 @@ const TeacherDashboard = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" title="عرض">
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          title="تعديل"
+                          onClick={() => handleEditQuiz(quiz)}
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          title="حذف"
+                          onClick={() => handleDeleteQuiz(quiz.id, quiz.title)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -533,16 +643,18 @@ const TeacherDashboard = () => {
         <>
           <CreateLessonModal
             open={showLessonModal}
-            onOpenChange={setShowLessonModal}
+            onOpenChange={handleLessonModalClose}
             teacherId={teacherProfile.id}
             onLessonCreated={refreshLessons}
+            editingLesson={editingLesson}
           />
           
           <CreateQuizModal
             open={showQuizModal}
-            onOpenChange={setShowQuizModal}
+            onOpenChange={handleQuizModalClose}
             teacherId={teacherProfile.id}
             onQuizCreated={refreshQuizzes}
+            editingQuiz={editingQuiz}
           />
         </>
       )}

@@ -15,6 +15,14 @@ interface CreateQuizModalProps {
   onOpenChange: (open: boolean) => void;
   teacherId: string;
   onQuizCreated: () => void;
+  editingQuiz?: {
+    id: string;
+    title: string;
+    description: string;
+    grade_id: string;
+    duration_minutes: number;
+    is_published: boolean;
+  } | null;
 }
 
 interface Grade {
@@ -35,7 +43,8 @@ const CreateQuizModal: React.FC<CreateQuizModalProps> = ({
   open, 
   onOpenChange, 
   teacherId, 
-  onQuizCreated 
+  onQuizCreated,
+  editingQuiz = null
 }) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -68,8 +77,54 @@ const CreateQuizModal: React.FC<CreateQuizModalProps> = ({
       if (data) setGrades(data);
     };
 
-    if (open) fetchGrades();
-  }, [open]);
+    const fetchQuizData = async () => {
+      if (editingQuiz) {
+        // تعبئة بيانات الاختبار
+        setFormData({
+          title: editingQuiz.title,
+          description: editingQuiz.description,
+          grade_id: editingQuiz.grade_id || '',
+          duration_minutes: editingQuiz.duration_minutes,
+          total_marks: 0,
+          is_published: editingQuiz.is_published
+        });
+
+        // جلب أسئلة الاختبار
+        const { data: questionsData } = await supabase
+          .from('quiz_questions')
+          .select('*')
+          .eq('quiz_id', editingQuiz.id)
+          .order('order_number', { ascending: true });
+
+        if (questionsData) {
+          const formattedQuestions = questionsData.map(q => ({
+            id: q.id,
+            question: q.question,
+            options: Array.isArray(q.options) ? q.options.map(opt => String(opt)) : [],
+            correct_answer: q.correct_answer || '',
+            marks: q.marks || 10
+          }));
+          setQuestions(formattedQuestions);
+        }
+      } else {
+        // إعادة تعيين النموذج للإنشاء الجديد
+        setFormData({
+          title: '',
+          description: '',
+          grade_id: '',
+          duration_minutes: 60,
+          total_marks: 100,
+          is_published: false
+        });
+        setQuestions([]);
+      }
+    };
+
+    if (open) {
+      fetchGrades();
+      fetchQuizData();
+    }
+  }, [open, editingQuiz]);
 
   const addQuestion = () => {
     if (!newQuestion.question.trim() || !newQuestion.correct_answer.trim()) {
@@ -130,40 +185,83 @@ const CreateQuizModal: React.FC<CreateQuizModalProps> = ({
       // حساب إجمالي الدرجات
       const totalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
       
-      // إنشاء الاختبار
-      const { data: quizData, error: quizError } = await supabase
-        .from('quizzes')
-        .insert([{
-          ...formData,
-          teacher_id: teacherId,
-          grade_id: formData.grade_id || null,
-          total_marks: totalMarks
-        }])
-        .select()
-        .single();
+      if (editingQuiz) {
+        // تحديث الاختبار الموجود
+        const { error: quizError } = await supabase
+          .from('quizzes')
+          .update({
+            ...formData,
+            grade_id: formData.grade_id || null,
+            total_marks: totalMarks
+          })
+          .eq('id', editingQuiz.id);
 
-      if (quizError) throw quizError;
+        if (quizError) throw quizError;
 
-      // إضافة الأسئلة
-      const questionsToInsert = questions.map((q, index) => ({
-        quiz_id: quizData.id,
-        question: q.question,
-        options: q.options,
-        correct_answer: q.correct_answer,
-        marks: q.marks,
-        order_number: index + 1
-      }));
+        // حذف الأسئلة القديمة
+        const { error: deleteError } = await supabase
+          .from('quiz_questions')
+          .delete()
+          .eq('quiz_id', editingQuiz.id);
 
-      const { error: questionsError } = await supabase
-        .from('quiz_questions')
-        .insert(questionsToInsert);
+        if (deleteError) throw deleteError;
 
-      if (questionsError) throw questionsError;
+        // إضافة الأسئلة الجديدة
+        const questionsToInsert = questions.map((q, index) => ({
+          quiz_id: editingQuiz.id,
+          question: q.question,
+          options: q.options,
+          correct_answer: q.correct_answer,
+          marks: q.marks,
+          order_number: index + 1
+        }));
 
-      toast({
-        title: 'تم إنشاء الاختبار بنجاح',
-        description: `تم إضافة الاختبار مع ${questions.length} سؤال`,
-      });
+        const { error: insertError } = await supabase
+          .from('quiz_questions')
+          .insert(questionsToInsert);
+
+        if (insertError) throw insertError;
+
+        toast({
+          title: 'تم تحديث الاختبار بنجاح',
+          description: `تم تحديث الاختبار مع ${questions.length} سؤال`,
+        });
+      } else {
+        // إنشاء اختبار جديد
+        const { data: quizData, error: quizError } = await supabase
+          .from('quizzes')
+          .insert([{
+            ...formData,
+            teacher_id: teacherId,
+            grade_id: formData.grade_id || null,
+            total_marks: totalMarks
+          }])
+          .select()
+          .single();
+
+        if (quizError) throw quizError;
+
+        // إضافة الأسئلة
+        const questionsToInsert = questions.map((q, index) => ({
+          quiz_id: quizData.id,
+          question: q.question,
+          options: q.options,
+          correct_answer: q.correct_answer,
+          marks: q.marks,
+          order_number: index + 1
+        }));
+
+        const { error: questionsError } = await supabase
+          .from('quiz_questions')
+          .insert(questionsToInsert);
+
+        if (questionsError) throw questionsError;
+
+        toast({
+          title: 'تم إنشاء الاختبار بنجاح',
+          description: `تم إضافة الاختبار مع ${questions.length} سؤال`,
+        });
+      }
 
       setFormData({
         title: '',
@@ -178,10 +276,10 @@ const CreateQuizModal: React.FC<CreateQuizModalProps> = ({
       onQuizCreated();
       onOpenChange(false);
     } catch (error) {
-      console.error('Error creating quiz:', error);
+      console.error('Error saving quiz:', error);
       toast({
-        title: 'خطأ في إنشاء الاختبار',
-        description: 'حدث خطأ أثناء إنشاء الاختبار، يرجى المحاولة مرة أخرى',
+        title: editingQuiz ? 'خطأ في تحديث الاختبار' : 'خطأ في إنشاء الاختبار',
+        description: 'حدث خطأ أثناء حفظ الاختبار، يرجى المحاولة مرة أخرى',
         variant: 'destructive',
       });
     } finally {
@@ -195,7 +293,7 @@ const CreateQuizModal: React.FC<CreateQuizModalProps> = ({
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             <FileText className="h-5 w-5 text-secondary" />
-            إنشاء اختبار جديد
+            {editingQuiz ? 'تعديل الاختبار' : 'إنشاء اختبار جديد'}
           </DialogTitle>
         </DialogHeader>
 
@@ -412,7 +510,10 @@ const CreateQuizModal: React.FC<CreateQuizModalProps> = ({
               disabled={isLoading || !formData.title || questions.length === 0}
               className="bg-gradient-secondary text-secondary-foreground hover:opacity-90"
             >
-              {isLoading ? 'جارٍ الإنشاء...' : 'إنشاء الاختبار'}
+              {isLoading 
+                ? (editingQuiz ? 'جارٍ التحديث...' : 'جارٍ الإنشاء...') 
+                : (editingQuiz ? 'حفظ التغييرات' : 'إنشاء الاختبار')
+              }
             </Button>
           </div>
         </form>

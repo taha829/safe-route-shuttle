@@ -15,6 +15,16 @@ interface CreateLessonModalProps {
   onOpenChange: (open: boolean) => void;
   teacherId: string;
   onLessonCreated: () => void;
+  editingLesson?: {
+    id: string;
+    title: string;
+    description: string;
+    content: string;
+    grade_id: string;
+    video_url: string;
+    attachment_url: string;
+    is_published: boolean;
+  } | null;
 }
 
 interface Grade {
@@ -27,7 +37,8 @@ const CreateLessonModal: React.FC<CreateLessonModalProps> = ({
   open, 
   onOpenChange, 
   teacherId, 
-  onLessonCreated 
+  onLessonCreated,
+  editingLesson = null
 }) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -53,28 +64,73 @@ const CreateLessonModal: React.FC<CreateLessonModalProps> = ({
       if (data) setGrades(data);
     };
 
-    if (open) fetchGrades();
-  }, [open]);
+    if (open) {
+      fetchGrades();
+      
+      // تعبئة البيانات عند التعديل
+      if (editingLesson) {
+        setFormData({
+          title: editingLesson.title || '',
+          description: editingLesson.description || '',
+          content: editingLesson.content || '',
+          grade_id: editingLesson.grade_id || '',
+          video_url: editingLesson.video_url || '',
+          attachment_url: editingLesson.attachment_url || '',
+          is_published: editingLesson.is_published || false
+        });
+      } else {
+        // إعادة تعيين النموذج للإنشاء الجديد
+        setFormData({
+          title: '',
+          description: '',
+          content: '',
+          grade_id: '',
+          video_url: '',
+          attachment_url: '',
+          is_published: false
+        });
+      }
+    }
+  }, [open, editingLesson]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const { error } = await supabase
-        .from('lessons')
-        .insert([{
-          ...formData,
-          teacher_id: teacherId,
-          grade_id: formData.grade_id || null
-        }]);
+      if (editingLesson) {
+        // تحديث الدرس الموجود
+        const { error } = await supabase
+          .from('lessons')
+          .update({
+            ...formData,
+            grade_id: formData.grade_id || null
+          })
+          .eq('id', editingLesson.id);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      toast({
-        title: 'تم إنشاء الدرس بنجاح',
-        description: 'تم إضافة الدرس الجديد إلى قائمة دروسك',
-      });
+        toast({
+          title: 'تم تحديث الدرس بنجاح',
+          description: 'تم حفظ التغييرات على الدرس',
+        });
+      } else {
+        // إنشاء درس جديد
+        const { error } = await supabase
+          .from('lessons')
+          .insert([{
+            ...formData,
+            teacher_id: teacherId,
+            grade_id: formData.grade_id || null
+          }]);
+
+        if (error) throw error;
+
+        toast({
+          title: 'تم إنشاء الدرس بنجاح',
+          description: 'تم إضافة الدرس الجديد إلى قائمة دروسك',
+        });
+      }
 
       setFormData({
         title: '',
@@ -89,10 +145,10 @@ const CreateLessonModal: React.FC<CreateLessonModalProps> = ({
       onLessonCreated();
       onOpenChange(false);
     } catch (error) {
-      console.error('Error creating lesson:', error);
+      console.error('Error saving lesson:', error);
       toast({
-        title: 'خطأ في إنشاء الدرس',
-        description: 'حدث خطأ أثناء إنشاء الدرس، يرجى المحاولة مرة أخرى',
+        title: editingLesson ? 'خطأ في تحديث الدرس' : 'خطأ في إنشاء الدرس',
+        description: 'حدث خطأ أثناء حفظ الدرس، يرجى المحاولة مرة أخرى',
         variant: 'destructive',
       });
     } finally {
@@ -106,7 +162,7 @@ const CreateLessonModal: React.FC<CreateLessonModalProps> = ({
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             <Upload className="h-5 w-5 text-primary" />
-            إنشاء درس جديد
+            {editingLesson ? 'تعديل الدرس' : 'إنشاء درس جديد'}
           </DialogTitle>
         </DialogHeader>
 
@@ -223,7 +279,10 @@ const CreateLessonModal: React.FC<CreateLessonModalProps> = ({
               disabled={isLoading || !formData.title}
               className="bg-gradient-primary text-primary-foreground hover:opacity-90"
             >
-              {isLoading ? 'جارٍ الإنشاء...' : 'إنشاء الدرس'}
+              {isLoading 
+                ? (editingLesson ? 'جارٍ التحديث...' : 'جارٍ الإنشاء...') 
+                : (editingLesson ? 'حفظ التغييرات' : 'إنشاء الدرس')
+              }
             </Button>
           </div>
         </form>
