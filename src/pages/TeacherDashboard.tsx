@@ -92,26 +92,29 @@ const TeacherDashboard = () => {
           return;
         }
 
-        // جلب بيانات المعلم
+        // جلب بيانات المعلم - أحدث ملف معتمد
         const { data: teacherData, error: teacherError } = await supabase
           .from('teachers')
           .select('*')
           .eq('user_id', session.user.id)
-          .single();
+          .eq('is_approved', true)
+          .order('created_at', { ascending: false })
+          .limit(1);
 
-        if (teacherError) {
+        if (teacherError || !teacherData || teacherData.length === 0) {
           // إذا لم يكن المعلم مسجل، توجيهه لإنشاء ملف تعريفي
           navigate('/teacher-setup');
           return;
         }
 
-        setTeacherProfile(teacherData);
+        const teacher = teacherData[0];
+        setTeacherProfile(teacher);
 
         // جلب الدروس
         const { data: lessonsData } = await supabase
           .from('lessons')
           .select('*')
-          .eq('teacher_id', teacherData.id)
+          .eq('teacher_id', teacher.id)
           .order('created_at', { ascending: false });
 
         if (lessonsData) setLessons(lessonsData);
@@ -120,7 +123,7 @@ const TeacherDashboard = () => {
         const { data: quizzesData } = await supabase
           .from('quizzes')
           .select('*')
-          .eq('teacher_id', teacherData.id)
+          .eq('teacher_id', teacher.id)
           .order('created_at', { ascending: false });
 
         if (quizzesData) setQuizzes(quizzesData);
@@ -133,7 +136,7 @@ const TeacherDashboard = () => {
             profiles(full_name),
             grades(name)
           `)
-          .eq('teacher_id', teacherData.id);
+          .eq('teacher_id', teacher.id);
 
         if (studentsData) setStudents(studentsData as any);
 
