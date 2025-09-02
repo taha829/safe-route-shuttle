@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { BookOpen, FileText, Clock, User, GraduationCap, Play } from 'lucide-react';
+import LessonViewModal from '@/components/modals/LessonViewModal';
 
 interface StudentProfile {
   id: string;
@@ -73,6 +74,8 @@ const StudentDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTeacher, setSelectedTeacher] = useState<string>('all');
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const [lessonModalOpen, setLessonModalOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -304,6 +307,11 @@ const StudentDashboard = () => {
 
   const uniqueSubjects = Array.from(new Set(teachers.map(t => t.subject)));
 
+  const handleViewLesson = (lesson: Lesson) => {
+    setSelectedLesson(lesson);
+    setLessonModalOpen(true);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -427,7 +435,7 @@ const StudentDashboard = () => {
                           </a>
                         </Button>
                       )}
-                      <Button size="sm">
+                      <Button size="sm" onClick={() => handleViewLesson(lesson)}>
                         <BookOpen className="h-4 w-4 mr-1" />
                         مشاهدة الدرس
                       </Button>
@@ -508,6 +516,12 @@ const StudentDashboard = () => {
           )}
         </TabsContent>
       </Tabs>
+
+      <LessonViewModal
+        lesson={selectedLesson}
+        open={lessonModalOpen}
+        onOpenChange={setLessonModalOpen}
+      />
     </div>
   );
 };
