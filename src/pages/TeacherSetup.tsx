@@ -44,8 +44,8 @@ const TeacherSetup = () => {
       if (error) throw error;
 
       toast({
-        title: 'تم إنشاء حسابك كمعلم بنجاح',
-        description: 'مرحباً بك! يمكنك الآن إدارة دروسك واختباراتك وطلابك',
+        title: 'تم إنشاء الملف التعريفي بنجاح',
+        description: 'مرحباً بك! يمكنك الآن الوصول للوحة التحكم وإدارة دروسك',
       });
 
       navigate('/teacher-dashboard');
@@ -73,7 +73,7 @@ const TeacherSetup = () => {
             </div>
             <CardTitle className="text-xl">إعداد ملف المعلم</CardTitle>
             <CardDescription>
-              أكمل بياناتك للحصول على حساب معلم مفعل فوراً ولوحة تحكم كاملة
+              أكمل بياناتك لإنشاء ملفك التعريفي كمعلم
             </CardDescription>
           </CardHeader>
           
