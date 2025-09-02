@@ -38,14 +38,14 @@ const TeacherSetup = () => {
           subject: formData.subject,
           experience_years: parseInt(formData.experience_years) || 0,
           bio: formData.bio,
-          is_approved: false
+          is_approved: true
         }]);
 
       if (error) throw error;
 
       toast({
-        title: 'تم إنشاء الملف التعريفي بنجاح',
-        description: 'سيتم مراجعة طلبك وتفعيل حسابك خلال 24 ساعة',
+        title: 'تم إنشاء حسابك كمعلم بنجاح',
+        description: 'مرحباً بك! يمكنك الآن إدارة دروسك واختباراتك وطلابك',
       });
 
       navigate('/teacher-dashboard');
@@ -73,7 +73,7 @@ const TeacherSetup = () => {
             </div>
             <CardTitle className="text-xl">إعداد ملف المعلم</CardTitle>
             <CardDescription>
-              أكمل بياناتك لإنشاء ملفك التعريفي كمعلم
+              أكمل بياناتك للحصول على حساب معلم مفعل فوراً ولوحة تحكم كاملة
             </CardDescription>
           </CardHeader>
           
