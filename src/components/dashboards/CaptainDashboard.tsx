@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTranslation } from '@/contexts/LanguageContext';
 import { 
   Users, 
@@ -12,12 +13,17 @@ import {
   Navigation,
   UserCheck,
   Bus,
-  Calendar
+  Calendar,
+  Map,
+  Activity
 } from 'lucide-react';
 import captainImage from '@/assets/bus-captain.jpg';
+import StudentsMap from '@/components/maps/StudentsMap';
+import LiveBusTracking from '@/components/tracking/LiveBusTracking';
 
 const CaptainDashboard: React.FC = () => {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState('overview');
 
   const stats = [
     {
@@ -129,9 +135,13 @@ const CaptainDashboard: React.FC = () => {
             مستعد لضمان النقل الآمن لـ 24 طالباً اليوم بإذن الله
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Button variant="glass" size="lg">
+            <Button variant="glass" size="lg" onClick={() => setActiveTab('tracking')}>
               <Navigation className="w-5 h-5" />
               بدء المسار اليومي
+            </Button>
+            <Button variant="glass" size="lg" onClick={() => setActiveTab('map')}>
+              <Map className="w-5 h-5" />
+              خريطة الطلاب
             </Button>
             <Button variant="glass" size="lg">
               <UserCheck className="w-5 h-5" />
@@ -140,6 +150,25 @@ const CaptainDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Navigation Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            نظرة عامة
+          </TabsTrigger>
+          <TabsTrigger value="map" className="flex items-center gap-2">
+            <Map className="w-4 h-4" />
+            خريطة الطلاب
+          </TabsTrigger>
+          <TabsTrigger value="tracking" className="flex items-center gap-2">
+            <Activity className="w-4 h-4" />
+            التتبع المباشر
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-6 mt-6">
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -298,6 +327,16 @@ const CaptainDashboard: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+        </TabsContent>
+
+        <TabsContent value="map" className="mt-6">
+          <StudentsMap />
+        </TabsContent>
+
+        <TabsContent value="tracking" className="mt-6">
+          <LiveBusTracking />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

@@ -14,6 +14,151 @@ export type Database = {
   }
   public: {
     Tables: {
+      bus_students: {
+        Row: {
+          bus_id: string
+          created_at: string
+          current_status: string
+          dropoff_location: Json | null
+          id: string
+          is_active: boolean
+          pickup_location: Json
+          pickup_time: string | null
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          bus_id: string
+          created_at?: string
+          current_status?: string
+          dropoff_location?: Json | null
+          id?: string
+          is_active?: boolean
+          pickup_location: Json
+          pickup_time?: string | null
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          bus_id?: string
+          created_at?: string
+          current_status?: string
+          dropoff_location?: Json | null
+          id?: string
+          is_active?: boolean
+          pickup_location?: Json
+          pickup_time?: string | null
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bus_students_bus_id_fkey"
+            columns: ["bus_id"]
+            isOneToOne: false
+            referencedRelation: "buses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bus_students_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bus_trips: {
+        Row: {
+          bus_id: string
+          created_at: string
+          end_time: string | null
+          id: string
+          route_data: Json | null
+          start_time: string | null
+          status: string
+          trip_date: string
+          trip_type: string
+          updated_at: string
+        }
+        Insert: {
+          bus_id: string
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          route_data?: Json | null
+          start_time?: string | null
+          status?: string
+          trip_date?: string
+          trip_type: string
+          updated_at?: string
+        }
+        Update: {
+          bus_id?: string
+          created_at?: string
+          end_time?: string | null
+          id?: string
+          route_data?: Json | null
+          start_time?: string | null
+          status?: string
+          trip_date?: string
+          trip_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bus_trips_bus_id_fkey"
+            columns: ["bus_id"]
+            isOneToOne: false
+            referencedRelation: "buses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      buses: {
+        Row: {
+          bus_number: string
+          capacity: number
+          captain_id: string
+          created_at: string
+          current_location: Json | null
+          id: string
+          license_plate: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          bus_number: string
+          capacity?: number
+          captain_id: string
+          created_at?: string
+          current_location?: Json | null
+          id?: string
+          license_plate?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          bus_number?: string
+          capacity?: number
+          captain_id?: string
+          created_at?: string
+          current_location?: Json | null
+          id?: string
+          license_plate?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buses_captain_id_fkey"
+            columns: ["captain_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       grades: {
         Row: {
           created_at: string | null
@@ -222,6 +367,63 @@ export type Database = {
             columns: ["teacher_id"]
             isOneToOne: false
             referencedRelation: "teachers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_attendance: {
+        Row: {
+          created_at: string
+          dropoff_location: Json | null
+          dropoff_time: string | null
+          id: string
+          notes: string | null
+          pickup_location: Json | null
+          pickup_time: string | null
+          status: string
+          student_id: string
+          trip_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          dropoff_location?: Json | null
+          dropoff_time?: string | null
+          id?: string
+          notes?: string | null
+          pickup_location?: Json | null
+          pickup_time?: string | null
+          status: string
+          student_id: string
+          trip_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          dropoff_location?: Json | null
+          dropoff_time?: string | null
+          id?: string
+          notes?: string | null
+          pickup_location?: Json | null
+          pickup_time?: string | null
+          status?: string
+          student_id?: string
+          trip_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_attendance_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_attendance_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "bus_trips"
             referencedColumns: ["id"]
           },
         ]
