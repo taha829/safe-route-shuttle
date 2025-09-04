@@ -357,6 +357,65 @@ const Login = () => {
           </CardContent>
         </Card>
 
+        {/* وضع التجربة السريعة */}
+        <Card className="mt-6 glass-card border-success/20 bg-gradient-to-br from-success/5 to-primary/5">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse text-success">
+              <Zap className="w-5 h-5" />
+              <span>وضع التجربة السريعة</span>
+            </CardTitle>
+            <CardDescription className="text-muted-foreground">
+              جرب جميع لوحات التحكم بدون الحاجة لإدخال بيانات
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Button 
+              variant="parent" 
+              className="w-full justify-start"
+              onClick={() => navigate('/?role=parent')}
+            >
+              <Users className="w-4 h-4" />
+              تجربة لوحة ولي الأمر
+            </Button>
+            
+            <Button 
+              variant="captain" 
+              className="w-full justify-start"
+              onClick={() => navigate('/?role=captain')}
+            >
+              <Bus className="w-4 h-4" />
+              تجربة لوحة الكابتن
+            </Button>
+            
+            <Button 
+              variant="school" 
+              className="w-full justify-start"
+              onClick={() => navigate('/?role=school')}
+            >
+              <GraduationCap className="w-4 h-4" />
+              تجربة لوحة المعلم
+            </Button>
+            
+            <Button 
+              variant="admin" 
+              className="w-full justify-start"
+              onClick={() => navigate('/?role=student')}
+            >
+              <MapPin className="w-4 h-4" />
+              تجربة لوحة الطالب
+            </Button>
+
+            <div className="mt-4 p-3 rounded-lg bg-success/10 border border-success/20">
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span className="text-sm font-medium text-success">
+                  💡 هذا الوضع يتيح لك تجربة جميع الميزات بدون الحاجة لإدخال بيانات حقيقية
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="text-center mt-6 text-white/80 text-sm">
           <p>© 2024 المنصة التعليمية - جميع الحقوق محفوظة</p>
         </div>

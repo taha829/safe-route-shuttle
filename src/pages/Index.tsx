@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { TestTube } from 'lucide-react';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import Navigation from '@/components/Navigation';
@@ -7,13 +9,33 @@ import CaptainDashboard from '@/components/dashboards/CaptainDashboard';
 import AdminDashboard from '@/components/dashboards/AdminDashboard';
 import SchoolNewsFeed from '@/pages/SchoolNewsFeed';
 import SchoolDashboard from '@/components/dashboards/SchoolDashboard';
+import StudentDashboard from '@/pages/StudentDashboard';
 import LiveTracking from '@/pages/LiveTracking';
 
 const Index = () => {
+  const [searchParams] = useSearchParams();
+  const roleFromURL = searchParams.get('role') as 'parent' | 'captain' | 'school' | 'admin' | 'student' | null;
+  
   const [currentRole, setCurrentRole] = useState<'parent' | 'captain' | 'school' | 'admin'>('parent');
   const [currentPage, setCurrentPage] = useState('dashboard');
 
+  useEffect(() => {
+    if (roleFromURL && ['parent', 'captain', 'school', 'admin', 'student'].includes(roleFromURL)) {
+      if (roleFromURL === 'student') {
+        // تحويل student إلى admin داخلياً لاستخدام StudentDashboard
+        setCurrentRole('admin');
+      } else {
+        setCurrentRole(roleFromURL);
+      }
+    }
+  }, [roleFromURL]);
+
   const renderDashboard = () => {
+    // معالجة خاصة للطالب
+    if (roleFromURL === 'student') {
+      return <StudentDashboard />;
+    }
+    
     switch (currentRole) {
       case 'parent':
         return <ParentDashboard />;
@@ -40,6 +62,25 @@ const Index = () => {
           />
           
           <main className="transition-all duration-300">
+            {/* عرض تنبيه الوضع التجريبي */}
+            {roleFromURL && (
+              <div className="bg-success/10 border border-success/20 p-4 m-6 rounded-lg">
+                <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                  <TestTube className="w-5 h-5 text-success" />
+                  <div>
+                    <h3 className="font-semibold text-success">الوضع التجريبي مُفعل</h3>
+                    <p className="text-sm text-muted-foreground">
+                      أنت الآن في وضع التجربة السريعة لـ {roleFromURL === 'parent' ? 'ولي الأمر' : 
+                                                                roleFromURL === 'captain' ? 'الكابتن' :
+                                                                roleFromURL === 'school' ? 'المعلم' :
+                                                                roleFromURL === 'student' ? 'الطالب' : 'المدير'} 
+                      - جميع البيانات المعروضة تجريبية
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {currentPage === 'dashboard' ? (
               renderDashboard()
             ) : currentPage === 'news' ? (
