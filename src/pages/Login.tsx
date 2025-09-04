@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap, TestTube, CheckCircle, Zap, Users, Bus, MapPin } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const Login = () => {
@@ -281,6 +281,79 @@ const Login = () => {
                 </div>
               </form>
             )}
+          </CardContent>
+        </Card>
+
+        {/* كارد الوضع التجريبي */}
+        <Card className="mt-6 glass-card border-primary/20 bg-gradient-to-br from-primary/5 to-secondary/5">
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-2 rtl:space-x-reverse mb-4">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <TestTube className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">جرب النظام مجاناً</h3>
+                <p className="text-sm text-muted-foreground">اكتشف جميع الميزات قبل الاشتراك</p>
+              </div>
+            </div>
+            
+            <div className="space-y-3 mb-4">
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm">
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span className="text-foreground">تتبع مباشر للحافلات والطلاب</span>
+              </div>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm">
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span className="text-foreground">إشعارات فورية وآمنة</span>
+              </div>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm">
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span className="text-foreground">إدارة متعددة الطلاب</span>
+              </div>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm">
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span className="text-foreground">مسارات ذكية ومحسنة</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="text-center">
+                <div className="flex items-center justify-center w-10 h-10 bg-success/10 rounded-lg mx-auto mb-2">
+                  <Users className="w-5 h-5 text-success" />
+                </div>
+                <p className="text-xs text-muted-foreground">أولياء الأمور</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg mx-auto mb-2">
+                  <Bus className="w-5 h-5 text-primary" />
+                </div>
+                <p className="text-xs text-muted-foreground">الكابتن</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center w-10 h-10 bg-secondary/10 rounded-lg mx-auto mb-2">
+                  <MapPin className="w-5 h-5 text-secondary" />
+                </div>
+                <p className="text-xs text-muted-foreground">المدرسة</p>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-lg bg-warning/10 border border-warning/20 mb-4">
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <Zap className="w-4 h-4 text-warning" />
+                <span className="text-sm font-medium text-warning">
+                  30 يوم تجربة مجانية كاملة
+                </span>
+              </div>
+            </div>
+
+            <Button 
+              variant="default" 
+              className="w-full"
+              onClick={() => navigate('/dashboard')}
+            >
+              <TestTube className="w-4 h-4" />
+              جرب النظام الآن مجاناً
+            </Button>
           </CardContent>
         </Card>
 
