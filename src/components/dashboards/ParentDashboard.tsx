@@ -15,7 +15,9 @@ import {
   Navigation,
   Plus,
   Settings,
-  Activity
+  Activity,
+  TestTube,
+  Zap
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,6 +30,7 @@ const ParentDashboard: React.FC = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
+  const [demoMode, setDemoMode] = useState(true);
   const [realTimeStats, setRealTimeStats] = useState({
     totalStudents: 0,
     activeBuses: 0,
@@ -203,6 +206,65 @@ const ParentDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Demo Mode Card */}
+      {demoMode && (
+        <Card className="shadow-card-custom border-primary/20 bg-gradient-to-br from-primary/5 to-secondary/5">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <TestTube className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground">الوضع التجريبي</h3>
+                  <p className="text-sm text-muted-foreground">جرب جميع الميزات مجاناً</p>
+                </div>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setDemoMode(false)}
+              >
+                إنهاء التجربة
+              </Button>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm">
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span>تتبع مباشر للحافلات والطلاب</span>
+              </div>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm">
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span>إشعارات فورية لحالة الأطفال</span>
+              </div>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm">
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span>إدارة متعددة للطلاب</span>
+              </div>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm">
+                <CheckCircle className="w-4 h-4 text-success" />
+                <span>تحديث المسارات تلقائياً</span>
+              </div>
+            </div>
+
+            <div className="mt-4 p-3 rounded-lg bg-warning/10 border border-warning/20">
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <Zap className="w-4 h-4 text-warning" />
+                <span className="text-sm font-medium text-warning">
+                  اشترك الآن واحصل على 30 يوم مجاناً
+                </span>
+              </div>
+            </div>
+
+            <Button variant="default" className="w-full mt-4">
+              <CreditCard className="w-4 h-4" />
+              ابدأ الاشتراك المجاني
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
