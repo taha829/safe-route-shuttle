@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslation } from '@/contexts/LanguageContext';
+import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   Bus, 
@@ -20,6 +21,7 @@ import trackingImage from '@/assets/tracking-map.jpg';
 
 const SchoolDashboard: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const stats = [
     {
@@ -104,21 +106,21 @@ const SchoolDashboard: React.FC = () => {
           لوحة تحكم شاملة لإدارة جميع أنشطة المدرسة والتواصل مع أولياء الأمور
         </p>
         <div className="flex flex-wrap gap-3">
-          <Button variant="glass" size="lg">
+          <Button variant="glass" size="lg" onClick={() => navigate('/school-news')}>
             <PlusCircle className="w-5 h-5" />
-            {t('school.createPost')}
+            إنشاء منشور جديد
           </Button>
-          <Button variant="glass" size="lg">
+          <Button variant="glass" size="lg" onClick={() => navigate('/student-registration')}>
             <Users className="w-5 h-5" />
-            {t('school.manageStudents')}
+            إدارة الطلاب
           </Button>
-          <Button variant="glass" size="lg">
+          <Button variant="glass" size="lg" onClick={() => navigate('/captain-dashboard')}>
             <Bus className="w-5 h-5" />
-            {t('school.busFleet')}
+            إدارة الحافلات
           </Button>
           <Button variant="glass" size="lg">
             <FileText className="w-5 h-5" />
-            {t('school.financial')}
+            التقارير المالية
           </Button>
         </div>
       </div>
@@ -260,7 +262,7 @@ const SchoolDashboard: React.FC = () => {
                 </div>
               </div>
             ))}
-            <Button variant="school" className="w-full">
+            <Button variant="school" className="w-full" onClick={() => navigate('/school-news')}>
               <MessageSquare className="w-4 h-4" />
               عرض جميع المنشورات
             </Button>
@@ -270,7 +272,7 @@ const SchoolDashboard: React.FC = () => {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="shadow-card-custom hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+        <Card className="shadow-card-custom hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick={() => navigate('/student-registration')}>
           <CardContent className="p-6 text-center">
             <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
               <Users className="w-6 h-6 text-primary" />
@@ -280,7 +282,7 @@ const SchoolDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="shadow-card-custom hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+        <Card className="shadow-card-custom hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick={() => navigate('/captain-dashboard')}>
           <CardContent className="p-6 text-center">
             <div className="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
               <MapPin className="w-6 h-6 text-secondary" />
@@ -290,13 +292,13 @@ const SchoolDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="shadow-card-custom hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+        <Card className="shadow-card-custom hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick={() => navigate('/school-news')}>
           <CardContent className="p-6 text-center">
             <div className="w-12 h-12 bg-success/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <DollarSign className="w-6 h-6 text-success" />
+              <MessageSquare className="w-6 h-6 text-success" />
             </div>
-            <h3 className="font-medium text-foreground mb-1">المدفوعات</h3>
-            <p className="text-xs text-muted-foreground">إدارة الرسوم والمدفوعات</p>
+            <h3 className="font-medium text-foreground mb-1">نشر المنشورات</h3>
+            <p className="text-xs text-muted-foreground">إنشاء ونشر الأخبار والإعلانات</p>
           </CardContent>
         </Card>
 
@@ -305,8 +307,8 @@ const SchoolDashboard: React.FC = () => {
             <div className="w-12 h-12 bg-warning/10 rounded-lg flex items-center justify-center mx-auto mb-3">
               <FileText className="w-6 h-6 text-warning" />
             </div>
-            <h3 className="font-medium text-foreground mb-1">التقارير</h3>
-            <p className="text-xs text-muted-foreground">تقارير شاملة وإحصائيات</p>
+            <h3 className="font-medium text-foreground mb-1">التقارير المالية</h3>
+            <p className="text-xs text-muted-foreground">تقارير شاملة وإحصائيات مالية</p>
           </CardContent>
         </Card>
       </div>
