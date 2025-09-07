@@ -75,12 +75,20 @@ export default {
 			},
 			boxShadow: {
 				'bus': 'var(--shadow-bus)',
-				'card-custom': 'var(--shadow-card)',
-				'glass': 'var(--shadow-glass)'
+				'card': 'var(--shadow-card)',
+				'glass': 'var(--shadow-glass)',
+				'elegant': 'var(--shadow-elegant)',
+				'glow': 'var(--shadow-glow)',
+				'card-custom': 'var(--shadow-card-custom)'
 			},
 			transitionTimingFunction: {
-				'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
-				'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+				'smooth': 'var(--transition-smooth)',
+				'bounce': 'var(--transition-bounce)',
+				'spring': 'var(--transition-spring)'
+			},
+			scale: {
+				'102': '1.02',
+				'105': '1.05'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

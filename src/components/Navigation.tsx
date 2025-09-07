@@ -49,94 +49,135 @@ const Navigation: React.FC<NavigationProps> = ({
 
   // Language is now Arabic only, no toggle needed
 
+  const getRoleGradient = () => {
+    switch (currentRole) {
+      case 'admin': return 'from-red-500 to-pink-600';
+      case 'school': return 'from-blue-500 to-indigo-600';
+      case 'captain': return 'from-green-500 to-emerald-600';
+      case 'parent': return 'from-purple-500 to-violet-600';
+      default: return 'from-primary to-primary-glow';
+    }
+  };
+
+  const getRoleTitle = () => {
+    switch (currentRole) {
+      case 'admin': return 'لوحة الإدارة العامة';
+      case 'school': return 'بوابة المدرسة';
+      case 'captain': return 'كابتن الباص';
+      case 'parent': return 'بوابة الأولياء';
+      default: return 'الطريق الآمن';
+    }
+  };
+
   return (
-    <nav className="bg-card border-b border-border shadow-card-custom sticky top-0 z-50 backdrop-blur-md">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center space-x-3 rtl:space-x-reverse">
-            <div className="flex items-center justify-center w-10 h-10 bg-gradient-primary rounded-lg shadow-bus">
-              <Bus className="w-6 h-6 text-white" />
+    <nav className="bg-card/95 backdrop-blur-xl border-b border-border/50 shadow-elegant sticky top-0 z-50">
+      <div className="container mx-auto px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20 lg:h-24">
+          {/* Professional Logo & Branding */}
+          <div className="flex items-center space-x-4 rtl:space-x-reverse">
+            <div className={`relative flex items-center justify-center w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-br ${getRoleGradient()} rounded-2xl shadow-glow`}>
+              <Bus className="w-7 h-7 lg:w-8 lg:h-8 text-white" />
+              <div className="absolute inset-0 bg-white/20 rounded-2xl animate-pulse-glow"></div>
             </div>
-            <div className="hidden md:block">
-              <h1 className="text-xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-                الطريق الآمن
+            <div className="hidden lg:block">
+              <h1 className="text-2xl xl:text-3xl font-bold bg-gradient-hero bg-clip-text text-transparent">
+                {getRoleTitle()}
               </h1>
-              <p className="text-xs text-muted-foreground">
-                {t('dashboard.subtitle')}
-              </p>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${getRoleGradient()} animate-pulse`}></div>
+                <p className="text-sm text-muted-foreground font-medium">
+                  {t('dashboard.subtitle')}
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-6 rtl:space-x-reverse">
+          {/* Professional Desktop Menu */}
+          <div className="hidden lg:flex items-center space-x-8 xl:space-x-10 rtl:space-x-reverse">
             {menuItems.map((item) => {
               const Icon = item.icon;
+              const isActive = currentPage === item.key;
               return (
                 <button
                   key={item.key}
                   onClick={() => onPageChange(item.key)}
-                  className={`flex items-center space-x-2 rtl:space-x-reverse px-3 py-2 rounded-lg transition-all duration-300 ${
-                    currentPage === item.key
-                      ? 'bg-gradient-primary text-white shadow-bus'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                  className={`group relative flex items-center space-x-3 rtl:space-x-reverse px-4 py-3 rounded-xl transition-all duration-500 ${
+                    isActive
+                      ? `bg-gradient-to-r ${getRoleGradient()} text-white shadow-glow transform scale-105`
+                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/50 hover:scale-102'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <Icon className={`w-5 h-5 transition-all duration-300 ${isActive ? 'animate-pulse' : 'group-hover:scale-110'}`} />
+                  <span className="text-sm font-semibold tracking-wide">{item.label}</span>
+                  {isActive && (
+                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-lg animate-bounce"></div>
+                  )}
                 </button>
               );
             })}
           </div>
 
-          {/* Right Controls */}
-          <div className="flex items-center space-x-3 rtl:space-x-reverse">
-            {/* Role Switcher */}
-            <div className="hidden md:flex bg-muted rounded-lg p-1">
-              {(['parent', 'captain', 'school', 'admin'] as const).map((role) => (
-                <Button
-                  key={role}
-                  variant={currentRole === role ? role : 'ghost'}
-                  size="sm"
-                  onClick={() => onRoleChange(role)}
-                  className="text-xs px-3 h-8"
-                >
-                  {t(`role.${role}`)}
-                </Button>
-              ))}
+          {/* Professional Right Controls */}
+          <div className="flex items-center space-x-4 rtl:space-x-reverse">
+            {/* Enhanced Role Switcher */}
+            <div className="hidden xl:flex bg-card border border-border/50 rounded-xl p-1.5 shadow-card-custom">
+              {(['parent', 'captain', 'school', 'admin'] as const).map((role) => {
+                const isCurrentRole = currentRole === role;
+                return (
+                  <Button
+                    key={role}
+                    variant={isCurrentRole ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => onRoleChange(role)}
+                    className={`relative text-xs px-4 h-9 font-medium transition-all duration-300 ${
+                      isCurrentRole 
+                        ? `bg-gradient-to-r ${getRoleGradient()} text-white shadow-glow`
+                        : 'hover:bg-accent/50'
+                    }`}
+                  >
+                    {t(`role.${role}`)}
+                    {isCurrentRole && (
+                      <div className="absolute inset-0 bg-white/20 rounded-md animate-pulse-glow"></div>
+                    )}
+                  </Button>
+                );
+              })}
             </div>
 
-            {/* Theme Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="w-9 h-9 rounded-lg"
-            >
-              {theme === 'light' ? (
-                <Moon className="w-4 h-4" />
-              ) : (
-                <Sun className="w-4 h-4" />
-              )}
-            </Button>
+            {/* Enhanced Controls Group */}
+            <div className="flex items-center space-x-2 rtl:space-x-reverse bg-card/50 border border-border/50 rounded-xl p-1 shadow-card-custom">
+              {/* Professional Theme Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                className="w-10 h-10 rounded-lg hover:bg-accent/50 transition-all duration-300 hover:scale-110"
+              >
+                {theme === 'light' ? (
+                  <Moon className="w-5 h-5 text-muted-foreground" />
+                ) : (
+                  <Sun className="w-5 h-5 text-muted-foreground" />
+                )}
+              </Button>
 
-            {/* Arabic Language Indicator */}
-            <div className="hidden md:flex items-center px-3 py-1 bg-primary/10 rounded-lg">
-              <Globe className="w-4 h-4 text-primary ml-2" />
-              <span className="text-sm font-medium text-primary">العربية</span>
+              {/* Enhanced Language Indicator */}
+              <div className="hidden lg:flex items-center px-4 py-2 bg-primary/10 rounded-lg border border-primary/20">
+                <Globe className="w-4 h-4 text-primary ml-2" />
+                <span className="text-sm font-semibold text-primary">العربية</span>
+              </div>
             </div>
 
-            {/* Mobile Menu Toggle */}
+            {/* Enhanced Mobile Menu Toggle */}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden w-9 h-9 rounded-lg"
+              className="lg:hidden w-12 h-12 rounded-xl hover:bg-accent/50 transition-all duration-300"
             >
               {isMenuOpen ? (
-                <X className="w-4 h-4" />
+                <X className="w-6 h-6" />
               ) : (
-                <Menu className="w-4 h-4" />
+                <Menu className="w-6 h-6" />
               )}
             </Button>
           </div>

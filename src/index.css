@@ -56,14 +56,20 @@
     --gradient-school: linear-gradient(135deg, hsl(var(--success)), hsl(var(--success)) 50%, hsl(var(--primary)));
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
 
+    /* Enhanced Professional Shadows for Header */
+    --shadow-elegant: 0 20px 40px -10px hsl(var(--foreground) / 0.1);
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.3);
+    --shadow-card-custom: 0 10px 25px -5px hsl(var(--foreground) / 0.08);
+
     /* Transportation Shadows */
     --shadow-bus: 0 20px 40px -10px hsl(45 93% 47% / 0.3);
     --shadow-card: 0 10px 30px -5px hsl(217 91% 60% / 0.1);
     --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Professional Animations */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-spring: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .dark {
@@ -107,6 +113,11 @@
     --gradient-secondary: linear-gradient(135deg, hsl(217 91% 65%), hsl(217 91% 75%));
     --gradient-hero: linear-gradient(135deg, hsl(217 91% 65%), hsl(45 93% 55%));
     --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+
+    /* Dark Mode Enhanced Professional Shadows */
+    --shadow-elegant: 0 20px 40px -10px hsl(var(--foreground) / 0.15);
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.4);
+    --shadow-card-custom: 0 10px 25px -5px hsl(var(--foreground) / 0.12);
 
     /* Dark Mode Shadows */
     --shadow-bus: 0 20px 40px -10px hsl(45 93% 55% / 0.4);
