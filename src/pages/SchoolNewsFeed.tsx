@@ -6,6 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import {
   Heart,
   MessageCircle,
@@ -20,7 +22,10 @@ import {
   Camera,
   Video,
   FileText,
-  Send
+  Send,
+  Upload,
+  X,
+  Loader2
 } from 'lucide-react';
 
 interface Post {
@@ -123,44 +128,140 @@ const SchoolNewsFeed = () => {
     type: 'text' as 'text' | 'image' | 'video' | 'lesson',
     title: '',
     content: '',
-    hashtags: ''
+    hashtags: '',
+    mediaFile: null as File | null,
+    mediaPreview: ''
   });
 
   const [showNewPost, setShowNewPost] = useState(false);
   const [activeComments, setActiveComments] = useState<string | null>(null);
   const [newComment, setNewComment] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleCreatePost = () => {
+  const uploadFile = async (file: File): Promise<string | null> => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const bucketName = file.type.startsWith('video/') ? 'school-videos' : 'school-images';
+      const filePath = `${bucketName}/${fileName}`;
+
+      const { data, error } = await supabase.storage
+        .from(bucketName)
+        .upload(filePath, file);
+
+      if (error) {
+        console.error('Upload error:', error);
+        toast.error('فشل في رفع الملف');
+        return null;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error('فشل في رفع الملف');
+      return null;
+    }
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('حجم الملف يجب أن يكون أقل من 10 ميجابايت');
+      return;
+    }
+
+    // Check file type
+    const isImage = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+    
+    if (!isImage && !isVideo) {
+      toast.error('يُسمح فقط برفع الصور والفيديوهات');
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setNewPost(prev => ({
+        ...prev,
+        mediaFile: file,
+        mediaPreview: e.target?.result as string,
+        type: isImage ? 'image' : 'video'
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeSelectedFile = () => {
+    setNewPost(prev => ({
+      ...prev,
+      mediaFile: null,
+      mediaPreview: '',
+      type: 'text'
+    }));
+  };
+
+  const handleCreatePost = async () => {
     if (!newPost.content.trim()) return;
 
-    const hashtags = newPost.hashtags
-      .split(' ')
-      .filter(tag => tag.startsWith('#'))
-      .map(tag => tag.substring(1));
+    setIsUploading(true);
 
-    const post: Post = {
-      id: Date.now().toString(),
-      type: newPost.type,
-      title: newPost.title || undefined,
-      content: newPost.content,
-      author: 'أ. سارة الأحمد',
-      authorRole: 'مدير المدرسة',
-      avatar: '/api/placeholder/40/40',
-      timestamp: 'الآن',
-      likes: 0,
-      comments: 0,
-      shares: 0,
-      hashtags: hashtags.length > 0 ? hashtags : [],
-      lessonDetails: newPost.type === 'lesson' ? {
-        subject: 'عام',
-        grade: 'جميع الصفوف',
-        duration: '30 دقيقة'
-      } : undefined
-    };
+    try {
+      let mediaUrl = '';
+      
+      // Upload file if exists
+      if (newPost.mediaFile) {
+        const uploadedUrl = await uploadFile(newPost.mediaFile);
+        if (!uploadedUrl) {
+          setIsUploading(false);
+          return;
+        }
+        mediaUrl = uploadedUrl;
+      }
 
-    setPosts([post, ...posts]);
-    setNewPost({ type: 'text', title: '', content: '', hashtags: '' });
-    setShowNewPost(false);
+      const hashtags = newPost.hashtags
+        .split(' ')
+        .filter(tag => tag.startsWith('#'))
+        .map(tag => tag.substring(1));
+
+      const post: Post = {
+        id: Date.now().toString(),
+        type: newPost.type,
+        title: newPost.title || undefined,
+        content: newPost.content,
+        author: 'أ. سارة الأحمد',
+        authorRole: 'مدير المدرسة',
+        avatar: '/api/placeholder/40/40',
+        timestamp: 'الآن',
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        hashtags: hashtags.length > 0 ? hashtags : [],
+        media: mediaUrl || undefined,
+        lessonDetails: newPost.type === 'lesson' ? {
+          subject: 'عام',
+          grade: 'جميع الصفوف',
+          duration: '30 دقيقة'
+        } : undefined
+      };
+
+      setPosts([post, ...posts]);
+      setNewPost({ type: 'text', title: '', content: '', hashtags: '', mediaFile: null, mediaPreview: '' });
+      setShowNewPost(false);
+      toast.success('تم نشر المنشور بنجاح');
+    } catch (error) {
+      console.error('Error creating post:', error);
+      toast.error('فشل في إنشاء المنشور');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleLike = (postId: string) => {
@@ -363,7 +464,7 @@ const SchoolNewsFeed = () => {
             </Button>
           ) : (
             <div className="space-y-4">
-              <div className="flex space-x-2 rtl:space-x-reverse">
+              <div className="flex space-x-2 rtl:space-x-reverse mb-4">
                 <Button
                   variant={newPost.type === 'text' ? 'default' : 'outline'}
                   size="sm"
@@ -372,21 +473,20 @@ const SchoolNewsFeed = () => {
                   <FileText className="w-4 h-4 ml-1" />
                   نص
                 </Button>
+                <input
+                  type="file"
+                  id="media-upload"
+                  accept="image/*,video/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
                 <Button
-                  variant={newPost.type === 'image' ? 'default' : 'outline'}
+                  variant="outline"
                   size="sm"
-                  onClick={() => setNewPost({ ...newPost, type: 'image' })}
+                  onClick={() => document.getElementById('media-upload')?.click()}
                 >
-                  <Camera className="w-4 h-4 ml-1" />
-                  صورة
-                </Button>
-                <Button
-                  variant={newPost.type === 'video' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setNewPost({ ...newPost, type: 'video' })}
-                >
-                  <Video className="w-4 h-4 ml-1" />
-                  فيديو
+                  <Upload className="w-4 h-4 ml-1" />
+                  رفع ملف
                 </Button>
                 <Button
                   variant={newPost.type === 'lesson' ? 'default' : 'outline'}
@@ -397,6 +497,33 @@ const SchoolNewsFeed = () => {
                   درس
                 </Button>
               </div>
+
+              {/* Media Preview */}
+              {newPost.mediaPreview && (
+                <div className="relative mb-4">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={removeSelectedFile}
+                    className="absolute top-2 right-2 z-10 bg-black/50 text-white hover:bg-black/70"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                  {newPost.type === 'image' ? (
+                    <img 
+                      src={newPost.mediaPreview} 
+                      alt="معاينة الصورة" 
+                      className="w-full h-48 object-cover rounded-lg"
+                    />
+                  ) : (
+                    <video 
+                      src={newPost.mediaPreview} 
+                      className="w-full h-48 object-cover rounded-lg"
+                      controls
+                    />
+                  )}
+                </div>
+              )}
 
               {newPost.type === 'lesson' && (
                 <Input
@@ -423,11 +550,19 @@ const SchoolNewsFeed = () => {
                 <Button
                   variant="outline"
                   onClick={() => setShowNewPost(false)}
+                  disabled={isUploading}
                 >
                   إلغاء
                 </Button>
-                <Button onClick={handleCreatePost}>
-                  نشر
+                <Button onClick={handleCreatePost} disabled={isUploading}>
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 ml-1 animate-spin" />
+                      جاري النشر...
+                    </>
+                  ) : (
+                    'نشر'
+                  )}
                 </Button>
               </div>
             </div>
