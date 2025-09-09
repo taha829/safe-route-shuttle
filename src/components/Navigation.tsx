@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useLanguage, useTranslation } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { 
@@ -15,7 +21,8 @@ import {
   CreditCard,
   Route,
   FileText,
-  Settings
+  Settings,
+  ChevronDown
 } from 'lucide-react';
 
 interface NavigationProps {
@@ -92,29 +99,47 @@ const Navigation: React.FC<NavigationProps> = ({
             </div>
           </div>
 
-          {/* Professional Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-8 xl:space-x-10 rtl:space-x-reverse">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = currentPage === item.key;
-              return (
-                <button
-                  key={item.key}
-                  onClick={() => onPageChange(item.key)}
-                  className={`group relative flex items-center space-x-3 rtl:space-x-reverse px-4 py-3 rounded-xl transition-all duration-500 ${
-                    isActive
-                      ? `bg-gradient-to-r ${getRoleGradient()} text-white shadow-glow transform scale-105`
-                      : 'text-muted-foreground hover:text-foreground hover:bg-accent/50 hover:scale-102'
-                  }`}
+          {/* Professional Desktop Menu - Dropdown */}
+          <div className="hidden lg:flex items-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={`group relative flex items-center space-x-3 rtl:space-x-reverse px-6 py-3 rounded-xl transition-all duration-500 bg-gradient-to-r ${getRoleGradient()} text-white shadow-glow hover:scale-105`}
                 >
-                  <Icon className={`w-5 h-5 transition-all duration-300 ${isActive ? 'animate-pulse' : 'group-hover:scale-110'}`} />
-                  <span className="text-sm font-semibold tracking-wide">{item.label}</span>
-                  {isActive && (
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-lg animate-bounce"></div>
-                  )}
-                </button>
-              );
-            })}
+                  <LayoutDashboard className="w-5 h-5" />
+                  <span className="text-sm font-semibold tracking-wide">القائمة الرئيسية</span>
+                  <ChevronDown className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                className="w-56 bg-card/95 backdrop-blur-xl border border-border/50 shadow-elegant z-50"
+                align="end"
+                sideOffset={8}
+              >
+                {menuItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = currentPage === item.key;
+                  return (
+                    <DropdownMenuItem
+                      key={item.key}
+                      onClick={() => onPageChange(item.key)}
+                      className={`flex items-center space-x-3 rtl:space-x-reverse px-4 py-3 cursor-pointer transition-all duration-300 ${
+                        isActive
+                          ? `bg-gradient-to-r ${getRoleGradient()} text-white`
+                          : 'hover:bg-accent/50'
+                      }`}
+                    >
+                      <Icon className={`w-5 h-5 ${isActive ? 'animate-pulse' : ''}`} />
+                      <span className="font-medium">{item.label}</span>
+                      {isActive && (
+                        <div className="mr-auto w-2 h-2 rounded-full bg-white animate-bounce"></div>
+                      )}
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Professional Right Controls */}
